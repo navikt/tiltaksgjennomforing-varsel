@@ -1,0 +1,30 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: tiltaksgjennomforing-varsel
+  namespace: default
+  labels:
+    team: teamtag
+spec:
+  image: navikt/tiltaksgjennomforing-varsel:{{version}}
+  team: teamtag
+  port: 8080
+  liveness:
+    path: /tiltaksgjennomforing-varsel/internal/healthcheck
+    initialDelay: 50
+    timeout: 1
+    periodSeconds: 10
+    failureThreshold: 3
+  readiness:
+    path: /tiltaksgjennomforing-varsel/internal/healthcheck
+    initialDelay: 50
+    timeout: 1
+  vault:
+    enabled: true
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: {{spring-profil}}
+  webproxy: true
+  prometheus:
+    enabled: true
+    path: /tiltaksgjennomforing-varsel/internal/actuator/prometheus

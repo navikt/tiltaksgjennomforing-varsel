@@ -1,0 +1,32 @@
+server:
+  port: 8081
+  servlet.context-path: /tiltaksgjennomforing-varsel
+
+management.endpoints.web:
+  exposure.include: info, health, metrics, prometheus
+  base-path: /internal/actuator
+
+spring:
+  profiles:
+    active: kafka
+  application:
+    name: tiltaksgjennomforing-varsel
+  main:
+    banner-mode: "off"
+  jmx:
+    enabled: false
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        spring:
+          json:
+            value.default.type: no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselMelding
+
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      group-id: ${spring.application.name}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

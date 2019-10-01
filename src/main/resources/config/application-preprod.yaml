@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    platform: postgres
+    driverClassName: org.postgresql.Driver
+  kafka:
+    bootstrap-servers: b27apvl00045.preprod.local:8443, b27apvl00046.preprod.local:8443, b27apvl00047.preprod.local:8443
+    properties:
+      security.protocol: SASL_SSL
+      sasl:
+        mechanism: PLAIN
+        jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="${tiltaksgjennomforing.serviceuser.username}" password="${tiltaksgjennomforing.serviceuser.password}";
+      ssl.truststore:
+        location: ${javax.net.ssl.trustStore}
+        password: ${javax.net.ssl.trustStorePassword}
+
+tiltaksgjennomforing:
+  database:
+    database-navn: tiltaksgjennomforing-varsel-preprod
+    database-url: ${spring.datasource.url}
+    vault-sti: postgresql/preprod-fss
+    minimum-idle: 1
+    maximum-pool-size: 2
+    max-lifetime: 300000
+  altinn-varsel:
+    uri: https://pep-gw-q1.oera-q.local:9443/ekstern/altinn/notificationagencyexternalbasic/v1
+  sts:
+    username: ${tiltaksgjennomforing.serviceuser.username}
+    password: ${tiltaksgjennomforing.serviceuser.password}
+    ws-uri: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
