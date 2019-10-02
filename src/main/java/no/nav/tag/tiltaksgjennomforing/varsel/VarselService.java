@@ -2,7 +2,10 @@ package no.nav.tag.tiltaksgjennomforing.varsel;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import no.finn.unleash.FeatureToggle;
+import no.finn.unleash.Unleash;
 import no.nav.tag.tiltaksgjennomforing.exceptions.AltinnException;
+import no.nav.tag.tiltaksgjennomforing.featuretoggles.FeatureToggleService;
 import no.nav.tag.tiltaksgjennomforing.varsel.altinnvarsel.AltinnVarselAdapter;
 import no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselMelding;
 import no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselResultatProducer;
@@ -17,19 +20,32 @@ public class VarselService {
     private final VarselKvitteringRepository varselKvitteringRepository;
     private final AltinnVarselAdapter altinnVarselAdapter;
     private final SmsVarselResultatProducer resultatProducer;
+    private final FeatureToggleService featureToggleService;
+
+    private static VarselKvittering ignorertUtsending(SmsVarselMelding varselMelding) {
+        return new VarselKvittering(varselMelding.getSmsVarselId(), VarselStatus.IGNORERT);
+    }
 
     public void prosesserVarsel(SmsVarselMelding varselMelding) {
         if (!varselKvitteringRepository.existsById(varselMelding.getSmsVarselId())) {
             log.info("SmsVarsel med smsVarselId={} prosesseres", varselMelding.getSmsVarselId());
-            VarselKvittering varselKvittering = sendVarsel(varselMelding);
-            varselKvitteringRepository.insert(varselKvittering);
-            resultatProducer.sendMeldingTilKafka(varselKvittering);
+            sendVarsel(varselMelding);
         } else {
             log.warn("SmsVarsel med smsVarselId={} er allerede prosessert. Sender ikke varsel på nytt.", varselMelding.getSmsVarselId());
         }
     }
 
-    private VarselKvittering sendVarsel(SmsVarselMelding varselMelding) {
+    private void sendVarsel(SmsVarselMelding varselMelding) {
+        VarselKvittering varselKvittering = featureToggleService.smsVarselErAktiv() ?
+                kallAltinnVarseltjeneste(varselMelding) :
+                ignorertUtsending(varselMelding);
+        varselKvitteringRepository.insert(varselKvittering);
+        if (varselKvittering.getStatus() != VarselStatus.IGNORERT) {
+            resultatProducer.sendMeldingTilKafka(varselKvittering);
+        }
+    }
+
+    private VarselKvittering kallAltinnVarseltjeneste(SmsVarselMelding varselMelding) {
         try {
             altinnVarselAdapter.sendVarsel(varselMelding.getIdentifikator(), varselMelding.getTelefonnummer(), varselMelding.getMeldingstekst());
             return new VarselKvittering(varselMelding.getSmsVarselId(), VarselStatus.SENDT);

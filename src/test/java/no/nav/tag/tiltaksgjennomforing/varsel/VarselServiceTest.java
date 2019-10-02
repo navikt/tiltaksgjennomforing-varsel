@@ -1,5 +1,7 @@
 package no.nav.tag.tiltaksgjennomforing.varsel;
 
+import no.nav.tag.tiltaksgjennomforing.featuretoggles.FeatureToggleService;
+import no.nav.tag.tiltaksgjennomforing.featuretoggles.FeatureToggleServiceMock;
 import no.nav.tag.tiltaksgjennomforing.varsel.altinnvarsel.AltinnVarselAdapter;
 import no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselMelding;
 import no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselResultatProducer;
@@ -7,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.UUID;
@@ -20,13 +23,14 @@ import static org.mockito.Mockito.when;
 public class VarselServiceTest {
     @InjectMocks
     private VarselService varselService;
-
     @Mock
     private VarselKvitteringRepository repository;
     @Mock
     private AltinnVarselAdapter altinnVarselAdapter;
     @Mock
     private SmsVarselResultatProducer resultatProducer;
+    @Spy
+    private FeatureToggleService featureToggleService = new FeatureToggleServiceMock();
 
     @Test
     public void prosesserMelding__sender_varsel_bare_en_gang() {
