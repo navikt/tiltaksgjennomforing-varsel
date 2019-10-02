@@ -15,7 +15,7 @@ public class SmsVarselResultatMelding {
     private UUID smsVarselId;
     private VarselStatus status;
 
-    public static SmsVarselResultatMelding nyResultaMelding(VarselKvittering varselKvittering) {
+    public static SmsVarselResultatMelding nyResultatMelding(VarselKvittering varselKvittering) {
         return new SmsVarselResultatMelding(varselKvittering.getId(), varselKvittering.getStatus());
     }
 }

@@ -17,7 +17,7 @@ public class SmsVarselResultatProducer {
     private final KafkaTemplate<String, SmsVarselResultatMelding> kafkaTemplate;
 
     public void sendMeldingTilKafka(VarselKvittering varselKvittering) {
-        SmsVarselResultatMelding resultatMelding = SmsVarselResultatMelding.nyResultaMelding(varselKvittering);
+        SmsVarselResultatMelding resultatMelding = SmsVarselResultatMelding.nyResultatMelding(varselKvittering);
         kafkaTemplate.send(Topics.SMS_VARSEL_RESULTAT, resultatMelding).addCallback(new ListenableFutureCallback<>() {
             @Override
             public void onFailure(Throwable ex) {
