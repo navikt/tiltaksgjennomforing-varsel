@@ -13,7 +13,7 @@ public class HealthCheckController {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @GetMapping(value = "/internal/healthcheck")
+    @GetMapping(value = "/healthcheck")
     public String healthcheck() {
         return jdbcTemplate.queryForObject("select 'ok'", String.class);
     }
