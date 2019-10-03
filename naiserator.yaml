@@ -29,7 +29,7 @@ spec:
   vault:
     enabled: true
   env:
-    - name: SPRING_PROFILES_INCLUDE
+    - name: SPRING_PROFILES_ACTIVE
       value: {{spring-profil}}
   webproxy: true
   prometheus:

@@ -13,6 +13,7 @@ public class VarselApplication {
     public static void main(String[] args) {
         SpringApplication application = new SpringApplicationBuilder(VarselApplication.class)
                 .initializers(new SjekkAktiveProfilerInitializer())
+                .profiles("kafka")
                 .build();
         application.run(args);
     }
