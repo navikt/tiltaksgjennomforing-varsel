@@ -16,7 +16,7 @@
             <appender-ref ref="consoleAppender"/>
         </logger>
     </springProfile>
-    <logger name="no.nav.vault.jdbc.hikaricp.VaultUtil" level="WARN" />
+    <logger name="no.nav.vault.jdbc" level="WARN" />
     <root level="INFO">
         <appender-ref ref="consoleAppender"/>
     </root>

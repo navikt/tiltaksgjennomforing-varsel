@@ -15,6 +15,6 @@ public class VarselApplication {
                 .initializers(new SjekkAktiveProfilerInitializer())
                 .profiles("kafka")
                 .build();
-        application.run(args);
+        application.run();
     }
 }
