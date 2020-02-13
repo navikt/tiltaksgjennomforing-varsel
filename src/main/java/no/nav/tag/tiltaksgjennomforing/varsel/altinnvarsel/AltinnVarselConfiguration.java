@@ -14,6 +14,6 @@ public class AltinnVarselConfiguration {
 
     @Bean
     public INotificationAgencyExternalBasic iNotificationAgencyExternalBasic() {
-        return WsClient.createPort(varselProperties.getUri().toString(), INotificationAgencyExternalBasic.class);
+        return WsClient.createPort(varselProperties.getUri().toString(), INotificationAgencyExternalBasic.class, varselProperties.isDebugLog());
     }
 }

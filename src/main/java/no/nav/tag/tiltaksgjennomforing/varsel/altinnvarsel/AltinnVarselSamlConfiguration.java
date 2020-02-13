@@ -16,7 +16,7 @@ public class AltinnVarselSamlConfiguration {
 
     @Bean
     public INotificationAgencyExternalBasic iNotificationAgencyExternalBasic() {
-        INotificationAgencyExternalBasic port = WsClient.createPort(varselProperties.getUri().toString(), INotificationAgencyExternalBasic.class);
+        INotificationAgencyExternalBasic port = WsClient.createPort(varselProperties.getUri().toString(), INotificationAgencyExternalBasic.class, varselProperties.isDebugLog());
         STSClientConfigurer configurer = new STSClientConfigurer(stsProperties.getWsUri(), stsProperties.getUsername(), stsProperties.getPassword(), varselProperties.isDebugLog());
         configurer.configureRequestSamlToken(port);
         return port;
