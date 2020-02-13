@@ -14,12 +14,14 @@ import java.util.Objects;
 public class WsClient {
 
     @SuppressWarnings("unchecked")
-    public static <T> T createPort(String serviceUrl, Class<T> portType, PhaseInterceptor<? extends Message>... interceptors) {
+    public static <T> T createPort(String serviceUrl, Class<T> portType, boolean debugLog, PhaseInterceptor<? extends Message>... interceptors) {
         JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
         factory.setServiceClass(portType);
         factory.setAddress(Objects.requireNonNull(serviceUrl));
         factory.getFeatures().add(new WSAddressingFeature());
-        factory.getFeatures().add(new LoggingFeature());
+        if (debugLog) {
+            factory.getFeatures().add(new LoggingFeature());
+        }
         T port = (T) factory.create();
         Client client = ClientProxy.getClient(port);
         Arrays.stream(interceptors).forEach(client.getOutInterceptors()::add);
