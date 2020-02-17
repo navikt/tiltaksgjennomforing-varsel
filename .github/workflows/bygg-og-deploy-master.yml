@@ -25,10 +25,10 @@ jobs:
       - name: Bygg og test med Maven
         run: mvn package -B -Dsurefire.useFile=false
      
-      - name: Hent tag
+      - name: Sett tag-navn
         run: echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
         
-      - name: Lag image-navn
+      - name: Sett image-navn
         run: echo "::set-env name=IMAGE::$IMAGE_BASE:$TAG"
         
       - name: Bygg, tag og push Docker-image
