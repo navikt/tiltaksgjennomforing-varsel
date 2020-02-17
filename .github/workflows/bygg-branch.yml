@@ -23,9 +23,6 @@ jobs:
           java-version: 11
 
       - name: Bygg og test med Maven
-        uses: actions/setup-java@v1
-          with:
-          java-version: '11'
         run: mvn package -B -Dsurefire.useFile=false
 
       - name: Hent tag
