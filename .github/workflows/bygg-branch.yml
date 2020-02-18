@@ -17,10 +17,10 @@ jobs:
       - name: Sjekk ut kode
         uses: actions/checkout@v2
 
-      - name: Oppsett Java 11
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
+#      - name: Oppsett Java 11
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: 11
 
 #      - name: Gjenopprett Maven-cache
 #        uses: actions/cache@v1
@@ -33,18 +33,12 @@ jobs:
 #      - name: Bygg og test med Maven
 #        run: mvn package -B -Dsurefire.useFile=false
 
-      - name: Sett commit-kortnavn
-        run: echo "::set-env name=SHA_SHORT::$(echo $GITHUB_SHA | cut -c1-7)"
-
-      - name: Sett tag-navn
-        run: echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$SHA_SHORT"
-
-      - name: Sett image-navn
-        run: echo "::set-env name=IMAGE::$IMAGE_BASE:$TAG"
-
-      - name: Sett branch-navn
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: extract_branch
+      - name: Sett variable
+        id: sett-variable
+        run: |
+          echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
+          echo "::set-env name=IMAGE::$IMAGE_BASE:$TAG"
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         
 #      - name: Bygg, tag og push Docker-image
 #        run: |
@@ -60,7 +54,7 @@ jobs:
             github.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Bygg av ${{ env.SHA_SHORT }} på ${{ steps.extract_branch.outputs.branch }}',
+              title: 'Bygg av ${{ env.SHA_SHORT }} på ${{ steps.sett-variable.outputs.branch }}',
               body: 'Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.',
               labels: ['${{ steps.extract_branch.outputs.branch }}']
             })
