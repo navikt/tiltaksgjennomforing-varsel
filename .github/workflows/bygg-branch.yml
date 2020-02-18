@@ -22,20 +22,23 @@ jobs:
         with:
           java-version: 11
 
-      - name: Gjenopprett Maven-cache
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+#      - name: Gjenopprett Maven-cache
+#        uses: actions/cache@v1
+#        with:
+#          path: ~/.m2/repository
+#          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+#          restore-keys: |
+#            ${{ runner.os }}-maven-
 
 #      - name: Bygg og test med Maven
 #        run: mvn package -B -Dsurefire.useFile=false
 
+      - name: Sett commit-kortnavn
+        run: echo "::set-env name=SHA_SHORT::$(echo $GITHUB_SHA | cut -c1-7)"
+
       - name: Sett tag-navn
-        run: echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
-        
+        run: echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$SHA_SHORT"
+
       - name: Sett image-navn
         run: echo "::set-env name=IMAGE::$IMAGE_BASE:$TAG"
 
@@ -57,7 +60,7 @@ jobs:
             github.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Bygg av ${{ env.TAG }} på ${{ steps.extract_branch.outputs.branch }}',
+              title: 'Bygg av ${{ env.$SHA_SHORT }} på ${{ steps.extract_branch.outputs.branch }}',
               body: 'Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.',
               assignees: [${{ env.GITHUB_ACTOR }}]
             })
