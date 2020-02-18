@@ -60,7 +60,6 @@ jobs:
             github.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Bygg av ${{ env.$SHA_SHORT }} på ${{ steps.extract_branch.outputs.branch }}',
-              body: 'Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.',
-              assignees: [${{ env.GITHUB_ACTOR }}]
+              title: 'Bygg av ${{ env.SHA_SHORT }} på ${{ steps.extract_branch.outputs.branch }}',
+              body: 'Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.'
             })
