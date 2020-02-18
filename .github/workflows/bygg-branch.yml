@@ -61,5 +61,6 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: 'Bygg av ${{ env.SHA_SHORT }} på ${{ steps.extract_branch.outputs.branch }}',
-              body: 'Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.'
+              body: 'Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.',
+              labels: [${{ steps.extract_branch.outputs.branch }}]
             })
