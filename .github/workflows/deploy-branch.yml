@@ -44,13 +44,16 @@ jobs:
         with:
           github-token: ${{secrets.NOTIFICATION}}
           script: |
-            const issue = { owner: context.issue.owner,
-                            repo: context.issue.repo,
-                            issue_number: ${{ github.event.client_payload.github.payload.issue.number }} }
-            github.issues.createComment({...issue,
-                                    title: 'Deploy av ${{ env.TAG }}',
-                                    body: '>deploy ${{ github.event.client_payload.slash_command.args }} feilet'})
-            github.issues.addLabels({...issue, labels: ['deployment-failed','dev-fss'])
+            github.issues.createComment({
+                                    issue_number: context.issue.number,
+                                    owner: context.repo.owner,
+                                    repo: context.repo.repo,
+                                    body: 'Deploy av $IMAGE feilet'})
+            github.issues.addLabels({
+                                    issue_number: context.issue.number,
+                                    owner: context.repo.owner,
+                                    repo: context.repo.repo,
+                                    labels: ['deployment-failed','dev-fss'])
 
       - name: Oppdater kommentar med deployment status
         if: success()
