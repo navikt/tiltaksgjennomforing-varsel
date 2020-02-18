@@ -48,7 +48,7 @@ jobs:
                                     issue_number: ${{ github.event.client_payload.github.payload.issue.number }},
                                     owner: context.repo.owner,
                                     repo: context.repo.repo,
-                                    body: 'Deploy av *${{ env.IMAGE }}* feilet ❌'
+                                    body: 'Deploy av <b>${{ env.TAG }}</b> feilet ❌'
             })
 
       - name: Oppdater kommentar med deployment status
@@ -61,6 +61,6 @@ jobs:
                             repo: context.issue.repo,
                             issue_number: ${{ github.event.client_payload.github.payload.issue.number }} }
             github.issues.createComment({...issue,
-                                    body: 'Deploy av *${{ env.IMAGE }}* ok ✅'})
+                                    body: 'Deploy av <b>${{ env.TAG }}</b> ok ✅'})
             github.issues.addLabels({...issue, labels: ['deployment','dev-fss']})
    
