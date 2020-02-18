@@ -10,7 +10,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   IMAGE_BASE: docker.pkg.github.com/${{ github.repository }}/tiltaksgjennomforing-varsel
   TAG: $(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)
-  IMAGE: $IMAGE_BASE:$TAG
+  IMAGE: ${{ env.IMAGE_BASE }}:${{ env.TAG }}
   BRANCH: $(echo ${GITHUB_REF#refs/heads/})
 
 jobs:
