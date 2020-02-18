@@ -30,8 +30,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      - name: Bygg og test med Maven
-        run: mvn package -B -Dsurefire.useFile=false
+#      - name: Bygg og test med Maven
+#        run: mvn package -B -Dsurefire.useFile=false
 
       - name: Sett tag-navn
         run: echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
@@ -43,11 +43,11 @@ jobs:
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
         
-      - name: Bygg, tag og push Docker-image
-        run: |
-          docker build --tag ${IMAGE} .
-          echo  ${GITHUB_TOKEN} | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} --password-stdin
-          docker push ${IMAGE_BASE}
+#      - name: Bygg, tag og push Docker-image
+#        run: |
+#          docker build --tag ${IMAGE} .
+#          echo  ${GITHUB_TOKEN} | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} --password-stdin
+#          docker push ${IMAGE_BASE}
 
       - name: Opprett deployment-issue
         uses: actions/github-script@0.5.0
@@ -57,7 +57,7 @@ jobs:
             github.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Bygg av ${{ env.TAG }} på ${{ steps.extract_branch.branch }}',
+              title: 'Bygg av ${{ env.TAG }} på ${{ steps.extract_branch.outputs.branch }}',
               body: 'Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.',
-              assignees: github.actor
+              assignees: [github.actor]
             })
