@@ -48,12 +48,8 @@ jobs:
                                     issue_number: context.issue.number,
                                     owner: context.repo.owner,
                                     repo: context.repo.repo,
-                                    body: 'Deploy av $IMAGE feilet'})
-            github.issues.addLabels({
-                                    issue_number: context.issue.number,
-                                    owner: context.repo.owner,
-                                    repo: context.repo.repo,
-                                    labels: ['deployment-failed','dev-fss'])
+                                    body: 'Deploy av $IMAGE feilet'
+            })
 
       - name: Oppdater kommentar med deployment status
         if: success()
