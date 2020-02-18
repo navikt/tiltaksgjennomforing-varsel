@@ -9,7 +9,8 @@ on:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   IMAGE_BASE: docker.pkg.github.com/${{ github.repository }}/tiltaksgjennomforing-varsel
-  
+  TAG: $(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)
+
 jobs:
   bygg-branch:
     runs-on: ubuntu-latest
@@ -55,5 +56,6 @@ jobs:
               repo: context.repo.repo,
               title: 'Bygg av ${{ env.TAG }}',
               body: 'Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.',
-              labels: ['${{ env.BRANCH }}']
+              labels: ['${{ env.BRANCH }}'],
+              assignees: ['']
             })
