@@ -45,7 +45,7 @@ jobs:
           github-token: ${{secrets.NOTIFICATION}}
           script: |
             github.issues.createComment({
-                                    issue_number: context.issue.number,
+                                    issue_number: ${{ github.event.client_payload.github.payload.issue.number }},
                                     owner: context.repo.owner,
                                     repo: context.repo.repo,
                                     body: 'Deploy av $IMAGE feilet'
