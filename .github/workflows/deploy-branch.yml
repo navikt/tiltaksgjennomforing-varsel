@@ -22,8 +22,8 @@ jobs:
           ref: ${{ env.TAG }}
 
       - name: Kontroller om branch er utdatert
-        uses: "srt32/git-actions@v0.0.3"
-        run: git merge-base --is-ancestor origin/master $TAG
+        uses: srt32/git-actions@v0.0.3
+        args: git merge-base --is-ancestor origin/master $TAG
 
       - name: Stopp deploy hvis branch er utdatert
         if: failure()
