@@ -42,13 +42,13 @@ jobs:
         if: failure()
         uses: actions/github-script@0.5.0
         with:
-          github-token: ${{secrets.NOTIFICATION}}
+          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.issues.createComment({
                                     issue_number: ${{ github.event.client_payload.github.payload.issue.number }},
                                     owner: context.repo.owner,
                                     repo: context.repo.repo,
-                                    body: 'Deploy av $IMAGE feilet'
+                                    body: 'Deploy av {{ env.IMAGE }} feilet'
             })
 
       - name: Oppdater kommentar med deployment status
