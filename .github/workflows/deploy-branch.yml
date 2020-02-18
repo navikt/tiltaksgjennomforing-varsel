@@ -38,6 +38,7 @@ jobs:
           RESOURCE: naiserator.yaml
           PRINT_PAYLOAD: true
           VARS: nais/dev-fss.json
+          REF: ${{ env.TAG }}
           VERSION: ${IMAGE}
           
       - name: Oppdater kommentar med deployment status ved feil
