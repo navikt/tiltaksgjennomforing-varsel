@@ -38,6 +38,10 @@ jobs:
         
       - name: Sett image-navn
         run: echo "::set-env name=IMAGE::$IMAGE_BASE:$TAG"
+
+      - name: Sett branch-navn
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
         
       - name: Bygg, tag og push Docker-image
         run: |
@@ -46,10 +50,14 @@ jobs:
           docker push ${IMAGE_BASE}
 
       - name: Opprett deployment-issue
-        if: success()
-        uses: maxkomarychev/oction-create-issue@v0.7.1
-        id: createdeployissue
+        uses: actions/github-script@0.5.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: Bygg av ${{ env.TAG }}
-          body: Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: "Bygg av ${{ env.TAG }} på ${{ steps.extract_branch.branch }}"
+              body: 'Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.',
+              assignee: github.actor
+            })
