@@ -34,9 +34,6 @@ jobs:
         run: mvn package -B -Dsurefire.useFile=false
 
       - name: Sett variable
-        id: sett_variable
-        outputs:
-          branch: echo ${GITHUB_REF#refs/heads/}
         run: |
           echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
           echo "::set-env name=IMAGE::$IMAGE_BASE:$TAG"
