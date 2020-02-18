@@ -4,10 +4,10 @@ metadata:
   name: tiltaksgjennomforing-varsel
   namespace: default
   labels:
-    team: teamtag
+    team: arbeidsgiver
 spec:
-  image: navikt/tiltaksgjennomforing-varsel:{{version}}
-  team: teamtag
+  image: {{image}}
+  team: arbeidsgiver
   port: 8081
   liveness:
     path: /tiltaksgjennomforing-varsel/healthcheck

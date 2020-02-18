@@ -27,11 +27,13 @@ public class STSClientConfigurer {
     private URI stsUri;
     private String serviceUsername;
     private String servicePassword;
+    private boolean logRequestsAndResponses;
 
-    STSClientConfigurer(URI stsUri, String serviceUsername, String servicePassword) {
+    STSClientConfigurer(URI stsUri, String serviceUsername, String servicePassword, boolean logRequestsAndResponses) {
         this.stsUri = stsUri;
         this.serviceUsername = serviceUsername;
         this.servicePassword = servicePassword;
+        this.logRequestsAndResponses = logRequestsAndResponses;
     }
 
     private static void setEndpointPolicyReference(Client client) {
@@ -80,8 +82,11 @@ public class STSClientConfigurer {
         stsClient.setEnableAppliesTo(false);
         stsClient.setAllowRenewing(false);
         stsClient.setLocation(stsUri.toString());
+
         // For debugging
-        stsClient.setFeatures(List.of(new LoggingFeature()));
+        if (logRequestsAndResponses) {
+            stsClient.setFeatures(List.of(new LoggingFeature()));
+        }
 
         HashMap<String, Object> properties = new HashMap<>();
         properties.put(org.apache.cxf.rt.security.SecurityConstants.USERNAME, serviceUsername);
