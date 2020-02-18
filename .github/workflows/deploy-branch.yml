@@ -51,7 +51,7 @@ jobs:
                                     body: 'Deploy av <b>${{ env.TAG }}</b> feilet ❌'
             })
 
-      - name: Oppdater kommentar med deployment status
+      - name: Oppdater kommentar med deployment status ved ok
         if: success()
         uses: actions/github-script@0.5.0
         with:

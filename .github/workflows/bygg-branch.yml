@@ -57,7 +57,7 @@ jobs:
             github.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: "Bygg av ${{ env.TAG }} på ${{ steps.extract_branch.branch }}"
+              title: 'Bygg av ${{ env.TAG }} på ${{ steps.extract_branch.branch }}',
               body: 'Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.',
-              assignee: github.actor
+              assignees: github.actor
             })
