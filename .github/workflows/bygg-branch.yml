@@ -34,7 +34,7 @@ jobs:
 #        run: mvn package -B -Dsurefire.useFile=false
 
       - name: Sett variable
-        id: sett-variable
+        id: sett_variable
         run: |
           echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
           echo "::set-env name=IMAGE::$IMAGE_BASE:$TAG"
@@ -54,7 +54,7 @@ jobs:
             github.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Bygg av ${{ env.SHA_SHORT }} på ${{ steps.sett-variable.outputs.branch }}',
+              title: 'Bygg av ${{ env.SHA_SHORT }} på ${{ steps.sett_variable.outputs.branch }}',
               body: 'Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.',
-              labels: ['${{ steps.extract_branch.outputs.branch }}']
+              labels: ['${{ steps.sett_variable.outputs.branch }}']
             })
