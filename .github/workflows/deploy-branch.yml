@@ -21,14 +21,10 @@ jobs:
         with:
           ref: ${{ env.TAG }}
 
-      - name: Kontroller om branch er utdatert
+      - name: Kontroller om branch er oppdatert mot master
         uses: srt32/git-actions@v0.0.3
         with:
           args: "git merge-base --is-ancestor origin/master $TAG"
-
-      - name: Stopp deploy hvis branch er utdatert
-        if: failure()
-        run: echo "Branchen må merges eller rebases mot origin/master." && exit 1
     
       - name: Deploy til dev-fss
         uses: nais/deploy/actions/deploy@v1
@@ -55,7 +51,7 @@ jobs:
                                     title: 'Deploy av ${{ env.TAG }}',
                                     body: '>deploy ${{ github.event.client_payload.slash_command.args }} feilet'})
             github.issues.addLabels({...issue, labels: ['deployment-failed','dev-fss'])
-   
+
       - name: Oppdater kommentar med deployment status
         if: success()
         uses: actions/github-script@0.4.0
