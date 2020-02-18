@@ -35,10 +35,12 @@ jobs:
 
       - name: Sett variable
         id: sett_variable
+        outputs:
+          branch: echo ${GITHUB_REF#refs/heads/}
         run: |
           echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
           echo "::set-env name=IMAGE::$IMAGE_BASE:$TAG"
-          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-env name=BRANCH::$(echo ${GITHUB_REF#refs/heads/})"
         
       - name: Bygg, tag og push Docker-image
         run: |
@@ -56,5 +58,5 @@ jobs:
               repo: context.repo.repo,
               title: 'Bygg av ${{ env.TAG }}',
               body: 'Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.',
-              labels: ['${{ steps.sett_variable.outputs.branch }}']
+              labels: ['${{ env.BRANCH }}']
             })
