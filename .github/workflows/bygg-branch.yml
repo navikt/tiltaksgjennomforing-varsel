@@ -36,7 +36,6 @@ jobs:
 
       - name: Sett variable
         run: |
-          echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
           echo "::set-env name=IMAGE::$IMAGE_BASE:$TAG"
           echo "::set-env name=BRANCH::$(echo ${GITHUB_REF#refs/heads/})"
         
