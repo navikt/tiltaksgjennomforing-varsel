@@ -55,17 +55,17 @@ jobs:
 #          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_REPOSITORY --password-stdin
 #          docker push $IMAGE_BASE
 
-    - name: Opprett deployment-issue
-      if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
-      uses: actions/github-script@0.5.0
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          github.issues.create({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            title: 'Bygg av ${{ steps.variable.outputs.tag }}',
-            body: 'Kommenter med <b>/deploy ${{ steps.variable.outputs.tag }}</b> for å deploye til dev-fss.',
-            labels: ['${{ steps.variable.outputs.branch }}'],
-            assignees: ['${{ github.actor }}']
-          })
+      - name: Opprett deployment-issue
+        if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
+        uses: actions/github-script@0.5.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Bygg av ${{ steps.variable.outputs.tag }}',
+              body: 'Kommenter med <b>/deploy ${{ steps.variable.outputs.tag }}</b> for å deploye til dev-fss.',
+              labels: ['${{ steps.variable.outputs.branch }}'],
+              assignees: ['${{ github.actor }}']
+            })
