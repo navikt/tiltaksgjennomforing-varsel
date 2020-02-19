@@ -21,10 +21,6 @@ jobs:
               state: 'open'
             })
 
-      - name: Kontroller om branch er oppdatert mot master
-        uses: srt32/git-actions@v0.0.3
-        with:
-          args: "git merge-base --is-ancestor origin/master $TAG"
 
 #      - run: |
 #          echo ${{ github.event.action }}
