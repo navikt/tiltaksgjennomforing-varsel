@@ -38,7 +38,8 @@ jobs:
           git fetch origin master
           echo ::set-output name=oppdatert::$(git merge-base --is-ancestor origin/master $GITHUB_SHA && echo ja || echo nei)
 
-      - run: echo ${{ steps.sjekk-mot-master.outputs.oppdatert }}
+      - name: Debug
+        run: echo ${{ steps.sjekk-mot-master.outputs.oppdatert }}
 
       - name: Sett variable
         if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
