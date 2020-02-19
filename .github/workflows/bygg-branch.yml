@@ -36,27 +36,27 @@ jobs:
         id: sjekk-mot-master
         run: |
           git fetch --all
-          echo ::set-output name=oppdatert::$(git merge-base --is-ancestor origin/master $GITHUB_SHA && echo "ja" || echo "nei")
+          echo ::set-output name=oppdatert::$(git merge-base --is-ancestor origin/master $GITHUB_SHA; echo $?)
 
       - name: Debug
         run: echo ${{ steps.sjekk-mot-master.outputs.oppdatert }}
 
       - name: Sett variable
-        if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
+        if: steps.sjekk-mot-master.outputs.oppdatert == 0
         id: variable
         run: |
           echo ::set-output name=tag::"$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
           echo ::set-output name=branch::"$(echo ${GITHUB_REF#refs/heads/})"
 
 #      - name: Bygg, tag og push Docker-image
-#        if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
+#        if: steps.sjekk-mot-master.outputs.oppdatert == 0
 #        run: |
 #          docker build --tag $IMAGE_BASE:${{ steps.variable.outputs.tag }} .
 #          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_REPOSITORY --password-stdin
 #          docker push $IMAGE_BASE
 
       - name: Opprett deployment-issue
-        if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
+        if: steps.sjekk-mot-master.outputs.oppdatert == 0
         uses: actions/github-script@0.5.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
