@@ -36,15 +36,9 @@ jobs:
       - name: Sett variable
         id: variable
         run: |
-          echo ::set-output name=TAG::"$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
-          echo ::set-output name=IMAGE::"$IMAGE_BASE:$TAG"
-          echo ::set-output name=BRANCH::"$(echo ${GITHUB_REF#refs/heads/})"
-
-      - name: Echo variable
-        run: |
-          echo ${{ steps.variable.outputs.TAG }}
-          echo ${{ steps.variable.outputs.IMAGE }}
-          echo ${{ steps.variable.outputs.BRANCH }}
+          echo ::set-output name=tag::"$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
+          echo ::set-output name=image::"$IMAGE_BASE:$TAG"
+          echo ::set-output name=branch::"$(echo ${GITHUB_REF#refs/heads/})"
 
 #      - name: Bygg, tag og push Docker-image
 #        run: |
@@ -60,8 +54,8 @@ jobs:
             github.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Bygg av ${{ env.TAG }}',
-              body: 'Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.',
-              labels: ['${{ env.BRANCH }}'],
+              title: 'Bygg av ${{ steps.variable.outputs.tag }}',
+              body: 'Kommenter med <b>/deploy ${{ steps.variable.outputs.tag }}</b> for å deploye til dev-fss.',
+              labels: ['${{ steps.variable.outputs.branch }}'],
               assignees: ['${{ github.actor }}']
             })
