@@ -36,7 +36,7 @@ jobs:
         id: sjekk-mot-master
         run: |
           git fetch origin master
-          echo ::set-output name=oppdatert::$(git merge-base --is-ancestor origin/master $GITHUB_SHA && echo ja || echo nei)
+          echo ::set-output name=oppdatert::$(git merge-base --is-ancestor origin/master $GITHUB_SHA && echo "ja" || echo "nei")
 
       - name: Debug
         run: echo ${{ steps.sjekk-mot-master.outputs.oppdatert }}
@@ -55,17 +55,18 @@ jobs:
 #          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_REPOSITORY --password-stdin
 #          docker push $IMAGE_BASE
 
-      - name: Opprett deployment-issue
-        if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
-        uses: actions/github-script@0.5.0
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.issues.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: 'Bygg av ${{ steps.variable.outputs.tag }}',
-              body: 'Kommenter med <b>/deploy ${{ steps.variable.outputs.tag }}</b> for å deploye til dev-fss.',
-              labels: ['${{ steps.variable.outputs.branch }}'],
-              assignees: ['${{ github.actor }}']
-            })
+  opprett-deployment-issue:
+    - name: Opprett deployment-issue
+      if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
+      uses: actions/github-script@0.5.0
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: 'Bygg av ${{ steps.variable.outputs.tag }}',
+            body: 'Kommenter med <b>/deploy ${{ steps.variable.outputs.tag }}</b> for å deploye til dev-fss.',
+            labels: ['${{ steps.variable.outputs.branch }}'],
+            assignees: ['${{ github.actor }}']
+          })
