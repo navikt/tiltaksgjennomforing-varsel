@@ -1,0 +1,28 @@
+name: Rydd opp issues etter pull request
+on:
+  pull_request:
+    types: [ssigned, unassigned, labeled, unlabeled, opened, edited, closed, reopened, synchronize, ready_for_review, locked, unlocked, review_requested, review_request_removed]
+
+jobs:
+  rydd-opp:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: |
+          echo ${{ github.event.action }}
+          echo ${{ env.GITHUB_SHA }}
+          echo ${{ env.GITHUB_REF }}
+          echo ${GITHUB_REF#refs/heads/}
+
+
+#      - name: Oppdater kommentar med deployment status ved feil
+#        if: failure()
+#        uses: actions/github-script@0.5.0
+#        with:
+#          github-token: ${{secrets.GITHUB_TOKEN}}
+#          script: |
+#            github.issues.listForRepo({
+#              owner: context.repo.owner,
+#              repo: context.repo.repo,
+#              labels: ''
+#            })
