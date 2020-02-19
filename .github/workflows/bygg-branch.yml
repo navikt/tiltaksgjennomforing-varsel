@@ -34,13 +34,17 @@ jobs:
 #        run: mvn package -B -Dsurefire.useFile=false
 
       - name: Sett variable
+        id: variable
         run: |
-          echo ::set-env name=TAG::"$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
-          echo ::set-env name=IMAGE::"$IMAGE_BASE:$TAG"
-          echo ::set-env name=BRANCH::"$(echo ${GITHUB_REF#refs/heads/})"
-          echo $TAG
-          echo $IMAGE
-          echo $BRANCH
+          echo ::set-output name=TAG::"$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
+          echo ::set-output name=IMAGE::"$IMAGE_BASE:$TAG"
+          echo ::set-output name=BRANCH::"$(echo ${GITHUB_REF#refs/heads/})"
+
+      - name: Echo variable
+        run: |
+          echo ${{ steps.variable.outputs.TAG }}
+          echo ${{ steps.variable.outputs.IMAGE }}
+          echo ${{ steps.variable.outputs.BRANCH }}
 
 #      - name: Bygg, tag og push Docker-image
 #        run: |
