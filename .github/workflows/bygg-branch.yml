@@ -38,6 +38,7 @@ jobs:
       - name: Sjekk om Docker-image skal bygges
         id: sjekk-mot-master
         run: |
+          git fetch origin master
           echo ::set-output name=oppdatert::$(git merge-base --is-ancestor origin/master $GITHUB_SHA; echo $?)
 
       - name: Debug
