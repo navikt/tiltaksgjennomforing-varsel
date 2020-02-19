@@ -36,7 +36,7 @@ jobs:
         id: sjekk-mot-master
         uses: srt32/git-actions@v0.0.3
         with:
-          args: 'echo ::set-output name=utdatert::"$(git merge-base --is-ancestor origin/master $GITHUB_SHA)"'
+          args: 'echo ::set-output name=utdatert::"$(git merge-base --is-ancestor master $GITHUB_SHA)"'
 
       - name: Sett variable
         if: steps.sjekk-mot-master.outputs.utdatert == 0
