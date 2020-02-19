@@ -39,21 +39,21 @@ jobs:
           args: 'echo ::set-output name=utdatert::"$(git merge-base --is-ancestor origin/master $GITHUB_SHA)"'
 
       - name: Sett variable
-        if: !steps.sjekk-mot-master.outputs.utdatert
+        if: steps.sjekk-mot-master.outputs.utdatert == 0
         id: variable
         run: |
           echo ::set-output name=tag::"$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
           echo ::set-output name=branch::"$(echo ${GITHUB_REF#refs/heads/})"
 
       - name: Bygg, tag og push Docker-image
-        if: !steps.sjekk-mot-master.outputs.utdatert
+        if: steps.sjekk-mot-master.outputs.utdatert == 0
         run: |
           docker build --tag $IMAGE_BASE:${{ steps.variable.outputs.tag }} .
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_REPOSITORY --password-stdin
           docker push $IMAGE_BASE
 
       - name: Opprett deployment-issue
-        if: !steps.sjekk-mot-master.outputs.utdatert
+        if: steps.sjekk-mot-master.outputs.utdatert == 0
         uses: actions/github-script@0.5.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
