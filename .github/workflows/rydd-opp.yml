@@ -10,8 +10,8 @@ jobs:
     steps:
       - run: |
           echo ${{ github.event.action }}
-          echo ${{ env.GITHUB_SHA }}
-          echo ${{ env.GITHUB_REF }}
+          echo $GITHUB_SHA
+          echo $GITHUB_REF
           echo ${GITHUB_REF#refs/heads/}
 
 
