@@ -35,7 +35,7 @@ jobs:
       - name: Sjekk om Docker-image skal bygges
         id: sjekk-mot-master
         run: |
-          echo ::set-output name=utdatert::"$(git merge-base --is-ancestor master $GITHUB_SHA)"
+          echo ::set-output name=utdatert::"$(git merge-base --is-ancestor origin/master $GITHUB_SHA)"
 
       - name: Sett variable
         if: steps.sjekk-mot-master.outputs.utdatert == 0
