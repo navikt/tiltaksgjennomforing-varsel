@@ -7,15 +7,17 @@ on:
       - '!master'
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   IMAGE_BASE: docker.pkg.github.com/${{ github.repository }}/tiltaksgjennomforing-varsel
-  
+
 jobs:
   bygg-branch:
     runs-on: ubuntu-latest
     steps:
       - name: Sjekk ut kode
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
 
       - name: Oppsett Java 11
         uses: actions/setup-java@v1
@@ -33,23 +35,62 @@ jobs:
       - name: Bygg og test med Maven
         run: mvn package -B -Dsurefire.useFile=false
 
-      - name: Sett tag-navn
-        run: echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
-        
-      - name: Sett image-navn
-        run: echo "::set-env name=IMAGE::$IMAGE_BASE:$TAG"
-        
-      - name: Bygg, tag og push Docker-image
+      - name: Sjekk om Docker-image skal bygges
+        id: sjekk-mot-master
         run: |
-          docker build --tag ${IMAGE} .
-          echo  ${GITHUB_TOKEN} | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} --password-stdin
-          docker push ${IMAGE_BASE}
+          git fetch origin master
+          echo ::set-output name=oppdatert::$(git merge-base --is-ancestor origin/master $GITHUB_SHA && echo ja || echo nei)
+
+      - name: Debug
+        run: echo ${{ steps.sjekk-mot-master.outputs.oppdatert }}
+
+      - name: Sett variable
+        if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
+        id: variable
+        run: |
+          echo ::set-output name=tag::"$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
+          echo ::set-output name=branch::"$(echo ${GITHUB_REF#refs/heads/})"
+
+      - name: Bygg, tag og push Docker-image
+        if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
+        run: |
+          docker build --tag $IMAGE_BASE:${{ steps.variable.outputs.tag }} .
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_REPOSITORY --password-stdin
+          docker push $IMAGE_BASE
+
+      - name: Lukk gamle deployment-issues
+        if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
+        uses: actions/github-script@0.5.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: ['deploy', '${{ steps.variable.outputs.branch }}']
+            }).then(response => {
+              response.data.forEach(issue => {
+                github.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed'
+                });
+              });
+            });
 
       - name: Opprett deployment-issue
-        if: success()
-        uses: maxkomarychev/oction-create-issue@v0.7.1
-        id: createdeployissue
+        if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
+        uses: actions/github-script@0.5.0
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          title: Bygg av ${{ env.TAG }}
-          body: Kommenter med <b>/deploy ${{ env.TAG }}</b> for å deploye til dev-fss.
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: 'Bygg av ${{ steps.variable.outputs.tag }}',
+              body: 'Kommenter med \n\n>/deploy ${{ steps.variable.outputs.tag }}\n\n for å deploye til dev-fss.',
+              labels: ['deploy', '${{ steps.variable.outputs.branch }}'],
+              assignees: ['${{ github.actor }}']
+            })
