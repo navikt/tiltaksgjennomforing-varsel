@@ -69,7 +69,7 @@ jobs:
               repo: context.repo.repo,
               labels: ['deploy', '${{ steps.variable.outputs.branch }}']
             });
-            issues.forEach(i => console.log(JSON.stringify(i)));
+            console.log(JSON.stringify(issues));
 
       - name: Opprett deployment-issue
         if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
