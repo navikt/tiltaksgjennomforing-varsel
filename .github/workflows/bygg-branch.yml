@@ -19,21 +19,21 @@ jobs:
           fetch-depth: 0
 
 
-      #      - name: Oppsett Java 11
-#        uses: actions/setup-java@v1
-#        with:
-#          java-version: 11
-#
-#      - name: Gjenopprett Maven-cache
-#        uses: actions/cache@v1
-#        with:
-#          path: ~/.m2/repository
-#          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-#          restore-keys: |
-#            ${{ runner.os }}-maven-
-#
-#      - name: Bygg og test med Maven
-#        run: mvn package -B -Dsurefire.useFile=false
+      - name: Oppsett Java 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Gjenopprett Maven-cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Bygg og test med Maven
+        run: mvn package -B -Dsurefire.useFile=false
 
       - name: Sjekk om Docker-image skal bygges
         id: sjekk-mot-master
@@ -51,12 +51,12 @@ jobs:
           echo ::set-output name=tag::"$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
           echo ::set-output name=branch::"$(echo ${GITHUB_REF#refs/heads/})"
 
-#      - name: Bygg, tag og push Docker-image
-#        if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
-#        run: |
-#          docker build --tag $IMAGE_BASE:${{ steps.variable.outputs.tag }} .
-#          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_REPOSITORY --password-stdin
-#          docker push $IMAGE_BASE
+      - name: Bygg, tag og push Docker-image
+        if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
+        run: |
+          docker build --tag $IMAGE_BASE:${{ steps.variable.outputs.tag }} .
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_REPOSITORY --password-stdin
+          docker push $IMAGE_BASE
 
       - name: Lukk gamle deployment-issues
         if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
