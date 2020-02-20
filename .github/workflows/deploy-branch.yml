@@ -57,7 +57,6 @@ jobs:
             github.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              state: 'open',
               labels: ['deploy', 'dev-fss']
             }).then(response => {
               response.data.forEach(issue => {
