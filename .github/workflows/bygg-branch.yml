@@ -58,7 +58,7 @@ jobs:
 #          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_REPOSITORY --password-stdin
 #          docker push $IMAGE_BASE
 
-      - name: Slett andre deployment-issue for branch
+      - name: Lukk gamle deployment-issues
         if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
         uses: actions/github-script@0.5.0
         with:
