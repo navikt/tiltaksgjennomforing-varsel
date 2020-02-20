@@ -21,7 +21,12 @@ jobs:
         with:
           ref: ${{ env.TAG }}
           fetch-depth: 0
-    
+
+      - name: Sjekk om branch er oppdatert mot master
+        run: |
+          git fetch origin master
+          git merge-base --is-ancestor origin/master $GITHUB_SHA
+
       - name: Deploy til dev-fss
         uses: nais/deploy/actions/deploy@v1
         env:
