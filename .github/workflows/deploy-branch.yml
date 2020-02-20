@@ -18,10 +18,9 @@ jobs:
           ref: ${{ github.event.client_payload.slash_command.arg1 }}
           fetch-depth: 0
 
-      - name: Sett variabler for image, namespace og cluster
+      - name: Sett variabel for commit
         run: |
            echo "::set-env name=COMMIT::$(git rev-parse HEAD)"
-           echo "::set-env name=IMAGE::$IMAGE_BASE:${{ github.event.client_payload.slash_command.arg1 }}"
 
       - name: Sjekk om branch er oppdatert mot master
         run: |
@@ -37,8 +36,8 @@ jobs:
           RESOURCE: naiserator.yaml
           PRINT_PAYLOAD: true
           VARS: nais/dev-fss.json
-          REF: ${{ env.COMMIT }}
-          VERSION: ${{ env.IMAGE }}
+          REF: $COMMIT
+          VERSION: $IMAGE_BASE:$COMMIT
           
       - name: Oppdater kommentar med deployment status ved feil
         if: failure()
