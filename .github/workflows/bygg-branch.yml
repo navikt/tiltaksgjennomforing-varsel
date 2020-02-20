@@ -90,7 +90,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: 'Bygg av ${{ steps.variable.outputs.tag }}',
-              body: 'Kommenter med <b>/deploy ${{ steps.variable.outputs.tag }}</b> for å deploye til dev-fss.',
+              body: 'Kommenter med \n\n<b>/deploy ${{ steps.variable.outputs.tag }}</b>\n\n for å deploye til dev-fss.',
               labels: ['deploy', '${{ steps.variable.outputs.branch }}'],
               assignees: ['${{ github.actor }}']
             })
