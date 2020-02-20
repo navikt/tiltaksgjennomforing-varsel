@@ -39,27 +39,39 @@ jobs:
         id: sjekk-mot-master
         run: |
           git fetch origin master
-          echo ::set-output name=oppdatert::$(git merge-base --is-ancestor origin/master $GITHUB_SHA; echo $?)
+          echo ::set-output name=oppdatert::$(git merge-base --is-ancestor origin/master $GITHUB_SHA && echo ja || echo nei)
 
       - name: Debug
         run: echo ${{ steps.sjekk-mot-master.outputs.oppdatert }}
 
       - name: Sett variable
-        if: steps.sjekk-mot-master.outputs.oppdatert == 0
+        if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
         id: variable
         run: |
           echo ::set-output name=tag::"$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
           echo ::set-output name=branch::"$(echo ${GITHUB_REF#refs/heads/})"
 
 #      - name: Bygg, tag og push Docker-image
-#        if: steps.sjekk-mot-master.outputs.oppdatert == 0
+#        if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
 #        run: |
 #          docker build --tag $IMAGE_BASE:${{ steps.variable.outputs.tag }} .
 #          echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_REPOSITORY --password-stdin
 #          docker push $IMAGE_BASE
 
+      - name: Slett andre deployment-issue for branch
+          if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
+          uses: actions/github-script@0.5.0
+          with:
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+            script: |
+              github.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: ['deploy', '${{ steps.variable.outputs.branch }}']
+              }).map(i => console.log(JSON.stringify(i)));
+
       - name: Opprett deployment-issue
-        if: steps.sjekk-mot-master.outputs.oppdatert == 0
+        if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
         uses: actions/github-script@0.5.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -69,6 +81,6 @@ jobs:
               repo: context.repo.repo,
               title: 'Bygg av ${{ steps.variable.outputs.tag }}',
               body: 'Kommenter med <b>/deploy ${{ steps.variable.outputs.tag }}</b> for å deploye til dev-fss.',
-              labels: ['${{ steps.variable.outputs.branch }}'],
+              labels: ['deploy', '${{ steps.variable.outputs.branch }}'],
               assignees: ['${{ github.actor }}']
             })
