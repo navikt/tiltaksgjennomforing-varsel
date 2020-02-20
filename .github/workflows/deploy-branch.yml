@@ -19,11 +19,11 @@ jobs:
       - name: Sjekk ut kode
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0
           ref: ${{ env.TAG }}
 
       - name: Sjekk om branch er oppdatert mot master
         run: |
+          git fetch origin HEAD
           git fetch origin master
           git merge-base --is-ancestor origin/master $TAG
 
