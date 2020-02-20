@@ -45,10 +45,10 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             github.issues.createComment({
-                                    issue_number: ${{ github.event.client_payload.github.payload.issue.number }},
-                                    owner: context.repo.owner,
-                                    repo: context.repo.repo,
-                                    body: 'Deploy av <b>${{ env.TAG }}</b> feilet ❌'
+              issue_number: ${{ github.event.client_payload.github.payload.issue.number }},
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Deploy av <b>${{ env.TAG }}</b> feilet ❌'
             })
 
       - name: Oppdater kommentar med deployment status ved ok
