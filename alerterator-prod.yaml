@@ -3,7 +3,7 @@ kind: "Alert"
 metadata:
   name: tiltaksgjennomforing-varsel-alert
   labels:
-    team: teamtag
+    team: arbeidsgiver
 spec:
   receivers:
     slack:
