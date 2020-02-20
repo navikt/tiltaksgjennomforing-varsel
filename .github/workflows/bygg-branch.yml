@@ -64,12 +64,10 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const issues = github.issues.listForRepo({
+            github.issues.listForRepo({
               owner: context.repo.owner,
-              repo: context.repo.repo,
-              labels: ['deploy', '${{ steps.variable.outputs.branch }}']
-            });
-            console.log(issues);
+              repo: context.repo.repo
+            }).then(issues => console.log(issues));
 
       - name: Opprett deployment-issue
         if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
