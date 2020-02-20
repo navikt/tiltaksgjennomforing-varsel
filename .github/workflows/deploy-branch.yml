@@ -19,6 +19,7 @@ jobs:
       - name: Sjekk ut kode
         uses: actions/checkout@v2
         with:
+          ref: ${{ env.COMMIT }}
           fetch-depth: 0
 
       - name: Sjekk om branch er oppdatert mot master
