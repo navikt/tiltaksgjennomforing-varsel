@@ -15,3 +15,4 @@ jobs:
           issue-type: issue
           allow_edits: true
           reactions: true
+          reaction-type: hooray
