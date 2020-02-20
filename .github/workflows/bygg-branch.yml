@@ -67,8 +67,9 @@ jobs:
             github.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
+              state: 'open',
               labels: ['deploy', '${{ steps.variable.outputs.branch }}']
-            }).then(issues => console.log(issues));
+            }).then(response => console.log(response.data));
 
       - name: Opprett deployment-issue
         if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
