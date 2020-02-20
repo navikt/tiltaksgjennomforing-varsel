@@ -23,6 +23,7 @@ jobs:
 
       - name: Sjekk om branch er oppdatert mot master
         run: |
+          git fetch --all
           git merge-base --is-ancestor origin/master $TAG
 
       - name: Deploy til dev-fss
