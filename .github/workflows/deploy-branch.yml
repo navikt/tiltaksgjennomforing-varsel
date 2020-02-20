@@ -11,16 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Sett variabler for image, namespace og cluster
-        run: |
-           echo "::set-env name=COMMIT::${{ github.event.client_payload.slash_command.arg1 }}"
-           echo "::set-env name=IMAGE::$IMAGE_BASE:${{ github.event.client_payload.slash_command.arg1 }}"
 
       - name: Sjekk ut kode
         uses: actions/checkout@v2
         with:
-          ref: ${{ env.COMMIT }}
+          ref: ${{ github.event.client_payload.slash_command.arg1 }}
           fetch-depth: 0
+
+      - name: Sett variabler for image, namespace og cluster
+        run: |
+           echo "::set-env name=COMMIT::$(git rev-parse HEAD)"
+           echo "::set-env name=IMAGE::$IMAGE_BASE:${{ github.event.client_payload.slash_command.arg1 }}"
 
       - name: Sjekk om branch er oppdatert mot master
         run: |
