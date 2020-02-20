@@ -84,8 +84,8 @@ jobs:
             github.issues.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: 'Bygg av $GITHUB_SHA',
-              body: 'Kommenter med \n\n>/deploy $GITHUB_SHA\n\n for å deploye til dev-fss.',
+              title: 'Bygg av ${{ env.GITHUB_SHA }}',
+              body: 'Kommenter med \n\n>/deploy ${{ env.GITHUB_SHA }}\n\n for å deploye til dev-fss.',
               labels: ['deploy', '${{ steps.variable.outputs.branch }}'],
               assignees: ['${{ github.actor }}']
             })
