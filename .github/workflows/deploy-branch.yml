@@ -53,10 +53,32 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const issue = { owner: context.issue.owner,
-                            repo: context.issue.repo,
-                            issue_number: ${{ github.event.client_payload.github.payload.issue.number }} }
-            github.issues.createComment({...issue,
-                                    body: 'Deploy av <b>${{ env.TAG }}</b> ok ✅'})
-            github.issues.addLabels({...issue, labels: ['deployment','dev-fss']})
-   
+            github.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: ['deploy', 'dev-fss']
+            }).then(response => {
+              response.data.forEach(issue => {
+                github.issues.removeLabel({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  name: 'dev-fss'
+                });
+              });
+            });
+
+            github.issues.createComment({
+              owner: context.issue.owner,
+              repo: context.issue.repo,
+              issue_number: ${{ github.event.client_payload.github.payload.issue.number }},
+              body: 'Deploy av <b>${{ env.TAG }}</b> ok ✅'
+            });
+
+            github.issues.addLabels({
+              owner: context.issue.owner,
+              repo: context.issue.repo,
+              issue_number: ${{ github.event.client_payload.github.payload.issue.number }},
+              labels: ['dev-fss']
+            });
