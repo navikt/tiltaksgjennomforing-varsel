@@ -52,18 +52,12 @@ jobs:
 
       - name: Bygg og test med Maven
         run: mvn package -B -Dsurefire.useFile=false
-     
-      - name: Sett tag-navn
-        run: echo "::set-env name=TAG::$(git log -1 --pretty='%ad' --date=format:'%Y%m%d%H%M%S')-$(echo $GITHUB_SHA | cut -c1-7)"
-        
-      - name: Sett image-navn
-        run: echo "::set-env name=IMAGE::$IMAGE_BASE:$TAG"
         
       - name: Bygg, tag og push Docker-image
         run: |
-          docker build --tag ${IMAGE} --tag ${IMAGE_BASE}:latest .
-          echo  ${GITHUB_TOKEN} | docker login docker.pkg.github.com -u ${GITHUB_REPOSITORY} --password-stdin
-          docker push ${IMAGE_BASE}   
+          docker build --tag $IMAGE_BASE:$GITHUB_SHA --tag $IMAGE_BASE:latest .
+          echo $GITHUB_TOKEN | docker login docker.pkg.github.com -u $GITHUB_REPOSITORY --password-stdin
+          docker push $IMAGE_BASE
     
       - name: Deploy til dev-fss
         uses: nais/deploy/actions/deploy@v1
@@ -74,7 +68,7 @@ jobs:
           RESOURCE: naiserator.yaml
           PRINT_PAYLOAD: true
           VARS: nais/dev-fss.json
-          VERSION: ${IMAGE}
+          VERSION: $IMAGE_BASE:$GITHUB_SHA
 
       - name: Deploy til prod-fss
         uses: nais/deploy/actions/deploy@v1
@@ -85,4 +79,4 @@ jobs:
           RESOURCE: naiserator.yaml
           PRINT_PAYLOAD: true
           VARS: nais/prod-fss.json
-          VERSION: ${IMAGE}
+          VERSION: $IMAGE_BASE:$GITHUB_SHA
