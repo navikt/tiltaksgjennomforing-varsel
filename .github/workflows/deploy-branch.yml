@@ -36,14 +36,14 @@ jobs:
           RESOURCE: naiserator.yaml
           PRINT_PAYLOAD: true
           VARS: nais/dev-fss.json
-          REF: $COMMIT
-          VERSION: $IMAGE_BASE:$COMMIT
+          REF: ${{ env.COMMIT }}
+          VERSION: ${{ env.IMAGE_BASE }}:${{ env.COMMIT }}
           
       - name: Oppdater kommentar med deployment status ved feil
         if: failure()
         uses: actions/github-script@0.5.0
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             github.issues.createComment({
               issue_number: ${{ github.event.client_payload.github.payload.issue.number }},
@@ -56,7 +56,7 @@ jobs:
         if: success()
         uses: actions/github-script@0.5.0
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             github.issues.listForRepo({
               owner: context.repo.owner,
