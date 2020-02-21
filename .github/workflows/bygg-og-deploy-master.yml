@@ -8,7 +8,6 @@ on:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   IMAGE_BASE: docker.pkg.github.com/${{ github.repository }}/tiltaksgjennomforing-varsel
-  IMAGE: ${{ env.IMAGE_BASE }}:${{ env.GITHUB_SHA }}
 
 jobs:
   bygg:
@@ -54,6 +53,9 @@ jobs:
 
       - name: Bygg og test med Maven
         run: mvn package -B -Dsurefire.useFile=false
+
+      - name: Sett miljøvariabel IMAGE
+        run: echo "::set-env name=IMAGE::$IMAGE_BASE:$GITHUB_SHA"
 
       - name: Bygg, tag og push Docker-image
         run: |
