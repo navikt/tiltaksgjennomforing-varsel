@@ -68,7 +68,7 @@ jobs:
           RESOURCE: naiserator.yaml
           PRINT_PAYLOAD: true
           VARS: nais/dev-fss.json
-          VERSION: ${{ env.IMAGE_BASE}}:${{ env.GITHUB_SHA}}
+          IMAGE: ${{ env.IMAGE_BASE}}:${{ env.GITHUB_SHA}}
 
       - name: Deploy til prod-fss
         uses: nais/deploy/actions/deploy@v1
@@ -79,4 +79,4 @@ jobs:
           RESOURCE: naiserator.yaml
           PRINT_PAYLOAD: true
           VARS: nais/prod-fss.json
-          VERSION: ${{ env.IMAGE_BASE}}:${{ env.GITHUB_SHA}}
+          IMAGE: ${{ env.IMAGE_BASE}}:${{ env.GITHUB_SHA}}
