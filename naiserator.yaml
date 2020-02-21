@@ -6,7 +6,7 @@ metadata:
   labels:
     team: arbeidsgiver
 spec:
-  image: {{image}}
+  image: docker.pkg.github.com/navikt/tiltaksgjennomforing-varsel/tiltaksgjennomforing-varsel:6e01bb249cc0780794094a487a0dc5f98a6251c3
   team: arbeidsgiver
   port: 8081
   liveness:
