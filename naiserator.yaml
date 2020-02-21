@@ -11,14 +11,16 @@ spec:
   port: 8081
   liveness:
     path: /tiltaksgjennomforing-varsel/healthcheck
-    initialDelay: 50
+    initialDelay: 20
     timeout: 1
-    periodSeconds: 10
-    failureThreshold: 3
+    periodSeconds: 5
+    failureThreshold: 10
   readiness:
     path: /tiltaksgjennomforing-varsel/healthcheck
-    initialDelay: 30
+    initialDelay: 20
     timeout: 1
+    periodSeconds: 5
+    failureThreshold: 10
   replicas:
     min: 1
     max: 1
