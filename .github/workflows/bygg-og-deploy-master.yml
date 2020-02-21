@@ -77,6 +77,7 @@ jobs:
           RESOURCE: naiserator.yaml
           PRINT_PAYLOAD: true
           VARS: nais/dev-fss.json
+          VERSION: ${{ env.GITHUB_SHA }}
           IMAGE: "${{ env.IMAGE_BASE }}:${{ env.GITHUB_SHA }}"
 
   deploy-prod:
@@ -96,4 +97,5 @@ jobs:
           RESOURCE: naiserator.yaml
           PRINT_PAYLOAD: true
           VARS: nais/prod-fss.json
+          VERSION: ${{ env.GITHUB_SHA }}
           IMAGE: "${{ env.IMAGE_BASE }}:${{ env.GITHUB_SHA }}"
