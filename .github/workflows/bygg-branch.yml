@@ -10,8 +10,8 @@ env:
   IMAGE_BASE: docker.pkg.github.com/${{ github.repository }}/tiltaksgjennomforing-varsel
 
 jobs:
-  maven-bygg:
-    name: Bygg med Maven
+  bygg:
+    name: Bygg branch og lag deployment-issue
     runs-on: ubuntu-latest
     steps:
       - name: Sjekk ut kode
@@ -35,11 +35,6 @@ jobs:
       - name: Bygg og test med Maven
         run: mvn package -B -Dsurefire.useFile=false
 
-  docker-bygg:
-    name: Bygg Docker-image
-    runs-on: ubuntu-latest
-    needs: maven-bygg
-    steps:
       - name: Sjekk om branch er oppdatert mot master
         id: sjekk-mot-master
         run: |
@@ -59,11 +54,6 @@ jobs:
           echo ${{ secrets.GITHUB_TOKEN }} | docker login docker.pkg.github.com -u $GITHUB_REPOSITORY --password-stdin
           docker push $IMAGE_BASE
 
-  deployment-issue:
-    name: Lag deployment-issue
-    runs-on: ubuntu-latest
-    needs: docker-bygg
-    steps:
       - name: Lukk gamle deployment-issues
         if: steps.sjekk-mot-master.outputs.oppdatert == 'ja'
         uses: actions/github-script@0.5.0
