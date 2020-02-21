@@ -14,5 +14,4 @@ jobs:
           commands: deploy
           issue-type: issue
           allow_edits: true
-          reactions: true
-          reaction-type: hooray
+          reactions: false
