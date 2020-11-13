@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tiltaksgjennomforing.varsel.VarselService;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +13,7 @@ import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.rule.EmbeddedKafkaRule;
 import org.springframework.kafka.test.utils.ContainerTestUtils;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
@@ -26,35 +27,18 @@ import java.util.UUID;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 @DirtiesContext
 @Slf4j
 @ActiveProfiles({"dev", "kafka"})
+@EmbeddedKafka(topics = Topics.SMS_VARSEL, bootstrapServersProperty = "${spring.embedded.kafka.brokers}")
 public class SmsVarselConsumerTest {
 
     @MockBean
     private VarselService varselService;
 
-    private KafkaTemplate<String, String> template;
-
     @Autowired
-    private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
-
-    @ClassRule
-    public static EmbeddedKafkaRule embeddedKafka = new EmbeddedKafkaRule(1, false, 1, Topics.SMS_VARSEL);
-
-    @Before
-    public void setUp() {
-        Map<String, Object> senderProperties = KafkaTestUtils.producerProps(embeddedKafka.getEmbeddedKafka().getBrokersAsString());
-        ProducerFactory<String, String> producerFactory = new DefaultKafkaProducerFactory<>(senderProperties);
-
-        template = new KafkaTemplate<>(producerFactory);
-
-        for (var messageListenerContainer : kafkaListenerEndpointRegistry.getListenerContainers()) {
-            ContainerTestUtils.waitForAssignment(messageListenerContainer, embeddedKafka.getEmbeddedKafka().getPartitionsPerTopic());
-        }
-    }
+    private KafkaTemplate<String, String> template;
 
     @Test
     public void testReceive() {
