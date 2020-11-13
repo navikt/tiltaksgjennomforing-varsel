@@ -1,8 +1,9 @@
 package no.nav.tag.tiltaksgjennomforing.infrastruktur;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class CorrelationIdSupplierTest {
     @Test
@@ -14,10 +15,9 @@ public class CorrelationIdSupplierTest {
         assertThat(token1).isEqualTo(egendefinertToken);
         assertThat(token2).isEqualTo(egendefinertToken);
     }
-
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void set__blank_fungerer_ikke() {
-        CorrelationIdSupplier.set("");
+        assertThatThrownBy(() ->    CorrelationIdSupplier.set("")).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
