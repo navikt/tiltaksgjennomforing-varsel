@@ -46,7 +46,7 @@ public class SmsVarselConsumerTest {
 
     @Before
     public void setUp() {
-        Map<String, Object> senderProperties = KafkaTestUtils.senderProps(embeddedKafka.getEmbeddedKafka().getBrokersAsString());
+        Map<String, Object> senderProperties = KafkaTestUtils.producerProps(embeddedKafka.getEmbeddedKafka().getBrokersAsString());
         ProducerFactory<String, String> producerFactory = new DefaultKafkaProducerFactory<>(senderProperties);
 
         template = new KafkaTemplate<>(producerFactory);

@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev
   kafka:
     bootstrap-servers: ${spring.embedded.kafka.brokers}
   json:
