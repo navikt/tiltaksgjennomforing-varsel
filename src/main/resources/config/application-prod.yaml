@@ -28,4 +28,4 @@ tiltaksgjennomforing:
     password: ${tiltaksgjennomforing.serviceuser.password}
     ws-uri: https://sts.adeo.no/SecurityTokenServiceProvider/
   unleash:
-    unleash-uri: https://unleash.nais.adeo.no/api/
+    unleash-uri: https://unleash.nais.io/api/
