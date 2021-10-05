@@ -7,8 +7,8 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  IMAGE_BASE: docker.pkg.github.com/${{ github.repository }}/tiltaksgjennomforing-varsel
-  IMAGE: docker.pkg.github.com/${{ github.repository }}/tiltaksgjennomforing-varsel:${{ github.sha }}
+  GITHUB_REPOSITORY: ${{ github.repository }}
+  IMAGE: ghcr.io/${{ github.repository }}/tiltaksgjennomforing-varsel:${{ github.sha }}
 
 jobs:
   bygg:
@@ -57,9 +57,9 @@ jobs:
 
       - name: Bygg, tag og push Docker-image
         run: |
-          docker build --tag $IMAGE --tag $IMAGE_BASE:latest .
-          echo $GITHUB_TOKEN | docker login docker.pkg.github.com -u $GITHUB_REPOSITORY --password-stdin
-          docker push $IMAGE_BASE
+          echo ${GITHUB_TOKEN} | docker login ghcr.io -u ${GITHUB_REPOSITORY} --password-stdin
+          docker build --tag ${IMAGE} .
+          docker push ${IMAGE}
 
   deploy-dev:
     name: Deploy til dev
@@ -76,7 +76,7 @@ jobs:
           CLUSTER: dev-fss
           RESOURCE: naiserator.yaml
           PRINT_PAYLOAD: true
-          VARS: nais/dev-fss.json
+          VAR: "spring-profil=preprod"
 
   deploy-prod:
     name: Deploy til prod
@@ -93,4 +93,4 @@ jobs:
           CLUSTER: prod-fss
           RESOURCE: naiserator.yaml
           PRINT_PAYLOAD: true
-          VARS: nais/prod-fss.json
+          VAR: "spring-profil=prod"
