@@ -1,7 +1,12 @@
 apiVersion: "nais.io/v1alpha1"
 kind: "Application"
 metadata:
+  {{# if aiven}}
+  name: tiltaksgjennomforing-varsel-aiven
+  {{/if}}
+  {{# unless aiven}}
   name: tiltaksgjennomforing-varsel
+  {{/unless}}
   namespace: arbeidsgiver
   labels:
     team: arbeidsgiver
