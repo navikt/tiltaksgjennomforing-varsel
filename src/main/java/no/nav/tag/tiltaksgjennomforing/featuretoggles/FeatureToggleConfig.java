@@ -13,14 +13,12 @@ import org.springframework.context.annotation.Profile;
 @Profile(value = {"prod", "prod-aiven", "preprod", "preprod-aiven"})
 public class FeatureToggleConfig {
 
-    private static final String APP_NAME = "tiltaksgjennomforing-varsel";
-
     @Bean
-    public Unleash initializeUnleash(@Value(
+    public Unleash initializeUnleash(@Value("${spring.application.name}") String applicationName, @Value(
             "${tiltaksgjennomforing.unleash.unleash-uri}") String unleashUrl, ByEnvironmentStrategy byEnvironmentStrategy) {
         UnleashConfig config = UnleashConfig.builder()
-                .appName(APP_NAME)
-                .instanceId(APP_NAME + "-" + byEnvironmentStrategy.getEnvironment())
+                .appName(applicationName)
+                .instanceId(applicationName + "-" + byEnvironmentStrategy.getEnvironment())
                 .unleashAPI(unleashUrl)
                 .build();
 

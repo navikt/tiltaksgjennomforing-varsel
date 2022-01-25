@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: tiltaksgjennomforing-varsel-aiven
   datasource:
     platform: postgres
     driverClassName: org.postgresql.Driver
