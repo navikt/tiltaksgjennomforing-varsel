@@ -13,12 +13,7 @@ public class FeatureToggleServiceImpl implements FeatureToggleService {
     private final Unleash unleash;
 
     @Override
-    public boolean smsVarselErDeaktivert() {
-        return unleash.isEnabled("arbeidsgiver.tiltak.smsvarsel.deaktivert");
-    }
-
-    @Override
-    public boolean smsVarselErIgnorert() {
-        return unleash.isEnabled("arbeidsgiver.tiltak.smsvarsel.ignorert");
+    public boolean smsVarselErAktivert() {
+        return unleash.isEnabled("arbeidsgiver.tiltak.smsvarsel.aktivert");
     }
 }

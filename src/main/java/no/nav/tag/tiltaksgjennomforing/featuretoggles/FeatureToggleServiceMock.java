@@ -7,12 +7,7 @@ import org.springframework.stereotype.Service;
 @Profile("dev")
 public class FeatureToggleServiceMock implements FeatureToggleService {
     @Override
-    public boolean smsVarselErDeaktivert() {
-        return false;
-    }
-
-    @Override
-    public boolean smsVarselErIgnorert() {
-        return false;
+    public boolean smsVarselErAktivert() {
+        return true;
     }
 }
