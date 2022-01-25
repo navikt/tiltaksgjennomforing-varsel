@@ -34,13 +34,19 @@ public class VarselService {
     }
 
     private void sendVarsel(SmsVarselMelding varselMelding) {
-        VarselKvittering varselKvittering = featureToggleService.smsVarselErAktiv() ?
-                kallAltinnVarseltjeneste(varselMelding) :
-                ignorertUtsending(varselMelding);
-        varselKvitteringRepository.insert(varselKvittering);
-        if (varselKvittering.getStatus() != VarselStatus.IGNORERT) {
-            resultatProducer.sendMeldingTilKafka(varselKvittering);
+        if (featureToggleService.smsVarselErDeaktivert()) {
+            log.info("Sms er deaktivert i Unleash. Lagrer ikke kvittering i db.");
+            return;
         }
+        if (featureToggleService.smsVarselErIgnorert()) {
+            log.info("Sms er ignorert i Unleash. Lagrer kvittering i db.");
+            varselKvitteringRepository.insert(ignorertUtsending(varselMelding));
+            return;
+        }
+
+        VarselKvittering varselKvittering = kallAltinnVarseltjeneste(varselMelding);
+        varselKvitteringRepository.insert(varselKvittering);
+        resultatProducer.sendMeldingTilKafka(varselKvittering);
     }
 
     private VarselKvittering kallAltinnVarseltjeneste(SmsVarselMelding varselMelding) {
