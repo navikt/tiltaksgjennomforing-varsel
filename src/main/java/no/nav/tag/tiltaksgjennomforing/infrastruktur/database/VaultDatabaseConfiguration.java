@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Profile;
 import javax.sql.DataSource;
 
 @Configuration
-@Profile({"preprod", "prod"})
+@Profile({"preprod", "preprod-aiven", "prod", "prod-aiven"})
 public class VaultDatabaseConfiguration {
     private final DatabaseProperties config;
 

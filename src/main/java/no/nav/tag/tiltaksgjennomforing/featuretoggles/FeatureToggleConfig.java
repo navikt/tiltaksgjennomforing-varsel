@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Profile;
 
 
 @Configuration
-@Profile(value = {"prod", "preprod"})
+@Profile(value = {"prod", "prod-aiven", "preprod", "preprod-aiven"})
 public class FeatureToggleConfig {
 
     private static final String APP_NAME = "tiltaksgjennomforing-varsel";

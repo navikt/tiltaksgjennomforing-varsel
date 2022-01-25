@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile({"prod", "preprod"})
+@Profile(value = {"prod", "prod-aiven", "preprod", "preprod-aiven"})
 @RequiredArgsConstructor
 public class FeatureToggleServiceImpl implements FeatureToggleService {
 
