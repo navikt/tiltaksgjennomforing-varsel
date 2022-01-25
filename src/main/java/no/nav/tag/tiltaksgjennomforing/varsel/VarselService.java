@@ -1,6 +1,7 @@
 package no.nav.tag.tiltaksgjennomforing.varsel;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tiltaksgjennomforing.exceptions.AltinnException;
 import no.nav.tag.tiltaksgjennomforing.featuretoggles.FeatureToggleService;
@@ -24,7 +25,10 @@ public class VarselService {
         return new VarselKvittering(varselMelding.getSmsVarselId(), VarselStatus.IGNORERT);
     }
 
+    @SneakyThrows
     public void prosesserVarsel(SmsVarselMelding varselMelding) {
+        // Tilfeldig sleep slik at to podder ikke kjører koden nøyaktig likt (om de har forskjellig group-id eller forskjellig Kafka)
+        Thread.sleep((long) (Math.random() * 1000), (int) (Math.random() * 100000));
         if (!varselKvitteringRepository.existsById(varselMelding.getSmsVarselId())) {
             log.info("SmsVarsel med smsVarselId={} prosesseres", varselMelding.getSmsVarselId());
             sendVarsel(varselMelding);
