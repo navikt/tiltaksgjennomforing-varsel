@@ -91,9 +91,9 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
-          RESOURCE: naiserator.yaml
+          RESOURCE: naiserator-aiven.yaml
           PRINT_PAYLOAD: true
-          VAR: spring-profil=preprod-aiven,aiven=ja
+          VAR: spring-profil=preprod-aiven
 
   deploy-prod:
     name: Deploy til prod
