@@ -15,7 +15,7 @@ public class FeatureToggleConfig {
 
     @Bean
     public Unleash initializeUnleash(@Value("${spring.application.name}") String applicationName, @Value(
-            "${tiltaksgjennomforing.unleash.unleash-uri}") String unleashUrl, ByEnvironmentStrategy byEnvironmentStrategy) {
+            "${tiltaksgjennomforing.unleash.unleash-uri}") String unleashUrl, ByEnvironmentStrategy byEnvironmentStrategy, ByApplicationStrategy byApplicationStrategy) {
         UnleashConfig config = UnleashConfig.builder()
                 .appName(applicationName)
                 .instanceId(applicationName + "-" + byEnvironmentStrategy.getEnvironment())
@@ -24,7 +24,8 @@ public class FeatureToggleConfig {
 
         return new DefaultUnleash(
                 config,
-                byEnvironmentStrategy
+                byEnvironmentStrategy,
+                byApplicationStrategy
         );
     }
 }
