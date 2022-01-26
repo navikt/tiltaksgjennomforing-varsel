@@ -10,7 +10,9 @@ spring:
       properties:
         spring:
           json:
-            value.default.type: no.nav.tag.tiltaksgjennomforing.varsel.Sms
+            value.default.type: no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselMelding
+            trusted:
+              packages: "*"
     bootstrap-servers: ${KAFKA_BROKERS}
     properties:
       security.protocol: SSL
