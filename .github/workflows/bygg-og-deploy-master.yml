@@ -93,7 +93,7 @@ jobs:
           CLUSTER: dev-fss
           RESOURCE: naiserator-aiven.yaml
           PRINT_PAYLOAD: true
-          VAR: spring-profil=preprod-aiven
+          VAR: spring-profil=preprod-aiven,kafka-pool=nav-dev
 
   deploy-prod:
     name: Deploy til prod
