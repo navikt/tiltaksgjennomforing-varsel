@@ -21,10 +21,8 @@ spring:
 
 tiltaksgjennomforing:
   topics:
-    sms: privat-tiltaksgjennomforing-smsVarsel
-    sms-resultat: privat-tiltaksgjennomforing-smsVarselResultat
-#    sms: arbeidsgiver.tiltak-sms
-#    sms-resultat: arbeidsgiver.tiltak-sms-resultat
+    sms: arbeidsgiver.tiltak-sms
+    sms-resultat: arbeidsgiver.tiltak-sms-resultat
   database:
     database-navn: tiltaksgjennomforing-varsel-preprod
     database-url: ${spring.datasource.url}
