@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.UUID;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.verify;
 @SpringBootTest
 @ActiveProfiles({"dev", "kafka"})
 @EmbeddedKafka(topics = {"sms", "sms-resultat"})
+@DirtiesContext
 public class VarselServiceTest {
     @Autowired
     private VarselService varselService;
@@ -34,7 +36,7 @@ public class VarselServiceTest {
 
     @Test
     public void prosesserMelding__sender_varsel_bare_en_gang() {
-        UUID smsVarselId = UUID.fromString("123e4567-e89b-12d3-a456-426655440000");
+        UUID smsVarselId = UUID.fromString("123e4567-e89b-12d3-a456-426655440009");
         SmsVarselMelding melding = new SmsVarselMelding(smsVarselId, "00000000000", "11111111", "test", null);
 
         varselService.prosesserVarsel(melding);
