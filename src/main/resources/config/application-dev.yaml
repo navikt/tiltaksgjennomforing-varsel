@@ -5,6 +5,12 @@ spring:
     username: sa
     password: sa
     driverClassName: org.h2.Driver
+  kafka:
+    consumer:
+      properties:
+        spring:
+          json:
+            value.default.type: no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselMelding
   h2:
     console:
       enabled: true

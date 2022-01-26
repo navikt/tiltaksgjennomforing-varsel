@@ -7,6 +7,10 @@ spring:
   kafka:
     consumer:
       group-id: tiltaksgjennomforing-varsel-aiven
+      properties:
+        spring:
+          json:
+            value.default.type: no.nav.tag.tiltaksgjennomforing.varsel.Sms
     bootstrap-servers: ${KAFKA_BROKERS}
     properties:
       security.protocol: SSL

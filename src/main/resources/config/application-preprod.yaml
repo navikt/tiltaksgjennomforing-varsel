@@ -3,6 +3,11 @@ spring:
     platform: postgres
     driverClassName: org.postgresql.Driver
   kafka:
+    consumer:
+      properties:
+        spring:
+          json:
+            value.default.type: no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselMelding
     bootstrap-servers: b27apvl00045.preprod.local:8443, b27apvl00046.preprod.local:8443, b27apvl00047.preprod.local:8443
     properties:
       security.protocol: SASL_SSL
