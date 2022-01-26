@@ -14,4 +14,5 @@ public class SmsVarselMelding {
     private String identifikator;
     private String telefonnummer;
     private String meldingstekst;
+    private String avsenderApplikasjon;
 }

@@ -42,7 +42,7 @@ public class SmsVarselConsumerTest {
     private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
 
     @ClassRule
-    public static EmbeddedKafkaRule embeddedKafka = new EmbeddedKafkaRule(1, false, 1, Topics.SMS_VARSEL);
+    public static EmbeddedKafkaRule embeddedKafka = new EmbeddedKafkaRule(1, false, 1, "sms");
 
     @Before
     public void setUp() {
@@ -58,9 +58,9 @@ public class SmsVarselConsumerTest {
 
     @Test
     public void testReceive() {
-        template.send(Topics.SMS_VARSEL, "{\"smsVarselId\":\"123e4567-e89b-12d3-a456-426655440000\",\"identifikator\":\"00000000000\",\"telefonnummer\":\"11111111\",\"meldingstekst\":\"test\"}");
+        template.send("sms", "{\"smsVarselId\":\"123e4567-e89b-12d3-a456-426655440000\",\"identifikator\":\"00000000000\",\"telefonnummer\":\"11111111\",\"meldingstekst\":\"test\"}");
 
         // Bruker timeout siden konsumering skjer asynkront etter sending. Hvis koden skal debugges bør timeout settes høyere enn 1000 ms.
-        verify(varselService, timeout(1000)).prosesserVarsel(new SmsVarselMelding(UUID.fromString("123e4567-e89b-12d3-a456-426655440000"), "00000000000", "11111111", "test"));
+        verify(varselService, timeout(1000)).prosesserVarsel(new SmsVarselMelding(UUID.fromString("123e4567-e89b-12d3-a456-426655440000"), "00000000000", "11111111", "test", null));
     }
 }

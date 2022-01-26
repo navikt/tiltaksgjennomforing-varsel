@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class SmsVarselConsumer {
     private final VarselService varselService;
 
-    @KafkaListener(topics = Topics.SMS_VARSEL)
+    @KafkaListener(topics = "${tiltaksgjennomforing.topics.sms}")
     public void consume(SmsVarselMelding varselMelding) {
         CorrelationIdSupplier.set(varselMelding.getSmsVarselId().toString());
         varselService.prosesserVarsel(varselMelding);

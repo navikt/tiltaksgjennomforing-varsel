@@ -14,6 +14,9 @@ spring:
         password: ${javax.net.ssl.trustStorePassword}
 
 tiltaksgjennomforing:
+  topics:
+    sms: privat-tiltaksgjennomforing-smsVarsel
+    sms-resultat: privat-tiltaksgjennomforing-smsVarselResultat
   database:
     database-navn: tiltaksgjennomforing-varsel-prod
     database-url: ${spring.datasource.url}
