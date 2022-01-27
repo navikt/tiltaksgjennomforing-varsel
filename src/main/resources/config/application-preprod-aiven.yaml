@@ -6,7 +6,8 @@ spring:
     driverClassName: org.postgresql.Driver
   kafka:
     consumer:
-      group-id: tiltaksgjennomforing-varsel-aiven
+      group-id: tiltaksgjennomforing-varsel-aiven-2
+      auto-offset-reset: latest
       properties:
         spring:
           json:
