@@ -14,12 +14,34 @@ spring:
   jmx:
     enabled: false
   kafka:
+    properties:
+      security.protocol: SSL
+      ssl:
+        keystore:
+          type: PKCS12
+          location: ${KAFKA_KEYSTORE_PATH}
+          password: ${KAFKA_CREDSTORE_PASSWORD}
+        truststore:
+          location: ${KAFKA_TRUSTSTORE_PATH}
+          password: ${KAFKA_CREDSTORE_PASSWORD}
+    bootstrap-servers: ${KAFKA_BROKERS}
     consumer:
       auto-offset-reset: earliest
       enable-auto-commit: false
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       group-id: ${spring.application.name}
+      properties:
+        spring:
+          json:
+            value.default.type: no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselMelding
+            trusted:
+              packages: "*"
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+tiltaksgjennomforing:
+  topics:
+    sms: arbeidsgiver.tiltak-sms
+    sms-resultat: arbeidsgiver.tiltak-sms-resultat

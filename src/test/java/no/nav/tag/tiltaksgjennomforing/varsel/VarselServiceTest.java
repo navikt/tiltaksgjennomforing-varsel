@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verify;
 
 @SpringBootTest
 @ActiveProfiles({"dev", "kafka"})
-@EmbeddedKafka(topics = {"sms", "sms-resultat"})
+@EmbeddedKafka(topics = {"arbeidsgiver.tiltak-sms", "arbeidsgiver.tiltak-sms-resultat"})
 @DirtiesContext
 public class VarselServiceTest {
     @Autowired
