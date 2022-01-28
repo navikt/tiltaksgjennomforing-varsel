@@ -6,11 +6,9 @@ spring:
     password: sa
     driverClassName: org.h2.Driver
   kafka:
-    consumer:
-      properties:
-        spring:
-          json:
-            value.default.type: no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselMelding
+    properties:
+      security.protocol: PLAINTEXT
+    bootstrap-servers: ${spring.embedded.kafka.brokers}
   h2:
     console:
       enabled: true
@@ -19,8 +17,5 @@ spring:
     banner-mode: "console"
 
 tiltaksgjennomforing:
-  topics:
-    sms: sms
-    sms-resultat: sms-resultat
   altinn-varsel:
     uri: http://localhost:8091
