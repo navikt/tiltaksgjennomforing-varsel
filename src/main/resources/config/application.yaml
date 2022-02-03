@@ -34,6 +34,7 @@ spring:
       properties:
         spring:
           json:
+            use.type.headers: false
             value.default.type: no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselMelding
             trusted:
               packages: "*"
