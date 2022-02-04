@@ -25,6 +25,10 @@ public class VarselService {
     }
 
     public void prosesserVarsel(SmsVarselMelding varselMelding) {
+        Boolean finneVarselFraFør = varselKvitteringRepository.findById(varselMelding.getSmsVarselId()).isEmpty();
+        Boolean finnes = varselKvitteringRepository.existsById(varselMelding.getSmsVarselId());
+        log.info("findbyId er {}, existsByID er: {}", finneVarselFraFør, finnes);
+
         if (!varselKvitteringRepository.existsById(varselMelding.getSmsVarselId())) {
             log.info("SmsVarsel med smsVarselId={} prosesseres", varselMelding.getSmsVarselId());
             sendVarsel(varselMelding);

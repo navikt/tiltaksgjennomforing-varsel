@@ -17,6 +17,7 @@ public class SmsVarselConsumer {
 
     @KafkaListener(topics = "${tiltaksgjennomforing.topics.sms}")
     public void consume(SmsVarselMelding varselMelding) {
+        log.info("Konsumerer melding med id: {}", varselMelding.getSmsVarselId());
         CorrelationIdSupplier.set(varselMelding.getSmsVarselId().toString());
         varselService.prosesserVarsel(varselMelding);
         CorrelationIdSupplier.remove();
