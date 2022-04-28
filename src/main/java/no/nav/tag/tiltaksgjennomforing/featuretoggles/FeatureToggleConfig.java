@@ -18,7 +18,7 @@ public class FeatureToggleConfig {
             "${tiltaksgjennomforing.unleash.unleash-uri}") String unleashUrl, ByEnvironmentStrategy byEnvironmentStrategy, ByApplicationStrategy byApplicationStrategy) {
         UnleashConfig config = UnleashConfig.builder()
                 .appName(applicationName)
-                .instanceId(applicationName + "-" + byEnvironmentStrategy.getEnvironment())
+                .instanceId(applicationName)
                 .unleashAPI(unleashUrl)
                 .build();
 

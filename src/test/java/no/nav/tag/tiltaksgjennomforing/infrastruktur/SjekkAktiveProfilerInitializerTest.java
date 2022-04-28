@@ -1,15 +1,16 @@
 package no.nav.tag.tiltaksgjennomforing.infrastruktur;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SjekkAktiveProfilerInitializerTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -19,22 +20,28 @@ public class SjekkAktiveProfilerInitializerTest {
         when(applicationContext.getEnvironment().getActiveProfiles()).thenReturn(profiler);
     }
 
-    @Test(expected = Exception.class)
+    @Test()
     public void initialize__ingen_profil() {
-        aktiveProfiler();
-        new SjekkAktiveProfilerInitializer().initialize(applicationContext);
+        Assertions.assertThrows(Exception.class, () -> {
+            aktiveProfiler();
+            new SjekkAktiveProfilerInitializer().initialize(applicationContext);
+        });
     }
 
-    @Test(expected = Exception.class)
+    @Test()
     public void initialize__feilaktig_profil() {
-        aktiveProfiler("foo");
-        new SjekkAktiveProfilerInitializer().initialize(applicationContext);
+        Assertions.assertThrows(Exception.class, () -> {
+            aktiveProfiler("foo");
+            new SjekkAktiveProfilerInitializer().initialize(applicationContext);
+        });
     }
 
-    @Test(expected = Exception.class)
+    @Test()
     public void initialize__for_mange_profiler() {
-        aktiveProfiler("dev", "prod");
-        new SjekkAktiveProfilerInitializer().initialize(applicationContext);
+        Assertions.assertThrows(Exception.class, () -> {
+            aktiveProfiler("dev", "prod");
+            new SjekkAktiveProfilerInitializer().initialize(applicationContext);
+        });
     }
 
     @Test
