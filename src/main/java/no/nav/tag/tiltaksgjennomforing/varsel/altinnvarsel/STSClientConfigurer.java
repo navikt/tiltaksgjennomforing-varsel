@@ -24,10 +24,10 @@ public class STSClientConfigurer {
     // when in production.
     private static final String STS_REQUEST_SAML_POLICY = "classpath:sts/policies/requestSamlPolicyNoTransportBinding.xml";
     private static final String STS_CLIENT_AUTHENTICATION_POLICY = "classpath:sts/policies/untPolicy.xml";
-    private URI stsUri;
-    private String serviceUsername;
-    private String servicePassword;
-    private boolean logRequestsAndResponses;
+    private final URI stsUri;
+    private final String serviceUsername;
+    private final String servicePassword;
+    private final boolean logRequestsAndResponses;
 
     STSClientConfigurer(URI stsUri, String serviceUsername, String servicePassword, boolean logRequestsAndResponses) {
         this.stsUri = stsUri;

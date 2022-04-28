@@ -16,6 +16,7 @@ spring:
   main:
     banner-mode: "console"
 
+
 tiltaksgjennomforing:
   altinn-varsel:
     uri: http://localhost:8091

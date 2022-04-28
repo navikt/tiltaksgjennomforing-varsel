@@ -2,65 +2,77 @@ package no.nav.tag.tiltaksgjennomforing.varsel.kafka;
 
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tiltaksgjennomforing.varsel.VarselService;
-import org.junit.Before;
-import org.junit.ClassRule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
-import org.springframework.kafka.test.rule.EmbeddedKafkaRule;
-import org.springframework.kafka.test.utils.ContainerTestUtils;
-import org.springframework.kafka.test.utils.KafkaTestUtils;
+import org.springframework.kafka.support.serializer.JsonSerializer;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
-@RunWith(SpringRunner.class)
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @DirtiesContext
 @Slf4j
 @ActiveProfiles({"dev", "kafka"})
+@EnableKafka
+@EmbeddedKafka(partitions = 1, topics = { "arbeidsgiver.tiltak-sms" })
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SmsVarselConsumerTest {
+
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String bootstrapServers;
+
+    @Autowired
+    SmsVarselConsumer smsVarselConsumer;
 
     @MockBean
     private VarselService varselService;
 
-    private KafkaTemplate<String, String> template;
+    private KafkaTemplate<String, SmsVarselMelding> kafkaTemplate;
 
-    @Autowired
-    private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
-
-    @ClassRule
-    public static EmbeddedKafkaRule embeddedKafka = new EmbeddedKafkaRule(1, false, 1, "arbeidsgiver.tiltak-sms");
-
-    @Before
+    @BeforeAll
     public void setUp() {
-        Map<String, Object> senderProperties = KafkaTestUtils.senderProps(embeddedKafka.getEmbeddedKafka().getBrokersAsString());
-        ProducerFactory<String, String> producerFactory = new DefaultKafkaProducerFactory<>(senderProperties);
+        Map<String, Object> props = new HashMap<>();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        props.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, false);
 
-        template = new KafkaTemplate<>(producerFactory);
-
-        for (var messageListenerContainer : kafkaListenerEndpointRegistry.getListenerContainers()) {
-            ContainerTestUtils.waitForAssignment(messageListenerContainer, embeddedKafka.getEmbeddedKafka().getPartitionsPerTopic());
-        }
+        kafkaTemplate = new KafkaTemplate<>(new DefaultKafkaProducerFactory<>(props));
     }
 
     @Test
-    public void testReceive() {
-        template.send("arbeidsgiver.tiltak-sms", "{\"smsVarselId\":\"123e4567-e89b-12d3-a456-426655440000\",\"identifikator\":\"00000000000\",\"telefonnummer\":\"11111111\",\"meldingstekst\":\"test\"}");
-
+    public void testReceive() throws InterruptedException {
+        SmsVarselMelding varselMelding = new SmsVarselMelding(
+                UUID.fromString( "123e4567-e89b-12d3-a456-426655440000"),
+                "00000000000",
+                "11111111",
+                "avtale om arbeidstrening iverksatt",
+                "tiltaksgjennomforing-varsel"
+        );
+        kafkaTemplate.send("arbeidsgiver.tiltak-sms", "test", varselMelding);
+        Thread.sleep(500L);
         // Bruker timeout siden konsumering skjer asynkront etter sending. Hvis koden skal debugges bør timeout settes høyere enn 1000 ms.
-        verify(varselService, timeout(1000)).prosesserVarsel(new SmsVarselMelding(UUID.fromString("123e4567-e89b-12d3-a456-426655440000"), "00000000000", "11111111", "test", null));
+        verify(varselService, timeout(500)).prosesserVarsel(new SmsVarselMelding(UUID.fromString("123e4567-e89b-12d3-a456-426655440000"), "00000000000", "11111111", "avtale om arbeidstrening iverksatt", "tiltaksgjennomforing-varsel"));
     }
 }

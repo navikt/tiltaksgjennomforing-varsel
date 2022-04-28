@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.verify;
 @ActiveProfiles({"dev", "kafka"})
 @EmbeddedKafka(topics = {"arbeidsgiver.tiltak-sms", "arbeidsgiver.tiltak-sms-resultat"})
 @DirtiesContext
+@EnableKafka
 public class VarselServiceTest {
     @Autowired
     private VarselService varselService;
