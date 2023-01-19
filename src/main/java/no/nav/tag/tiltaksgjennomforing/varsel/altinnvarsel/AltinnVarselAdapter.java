@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import no.altinn.schemas.serviceengine.formsengine._2009._10.TransportType;
 import no.altinn.schemas.services.serviceengine.notification._2009._10.*;
 import no.altinn.schemas.services.serviceengine.standalonenotificationbe._2009._10.StandaloneNotificationBEList;
+import no.altinn.services.common.fault._2009._10.AltinnFault;
 import no.altinn.services.serviceengine.notification._2010._10.INotificationAgencyExternalBasic;
 import no.altinn.services.serviceengine.notification._2010._10.INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage;
 import no.nav.tag.tiltaksgjennomforing.exceptions.AltinnException;
@@ -55,6 +56,10 @@ public class AltinnVarselAdapter {
                     standaloneNotification);
         } catch (INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage | RuntimeException e) {
             log.error("Feil ved varsling gjennom Altinn", e);
+            if (e instanceof INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage) {
+                AltinnFault faultInfo = ((INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage) e).getFaultInfo();
+                log.error(faultInfo.getAltinnErrorMessage().getValue());
+            }
             throw new AltinnException("Feil ved varsling gjennom Altinn");
         }
     }
