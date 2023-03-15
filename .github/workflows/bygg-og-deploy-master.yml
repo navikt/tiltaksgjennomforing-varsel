@@ -91,6 +91,6 @@ jobs:
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: prod-fss
-          RESOURCE: naiserator.yaml,naiserator-prod.yaml
+          RESOURCE: naiserator.yaml,alerterator-prod.yaml
           PRINT_PAYLOAD: true
           VAR: spring-profil=prod,kafka-pool=nav-prod
