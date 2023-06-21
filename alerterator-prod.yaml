@@ -35,7 +35,7 @@ spec:
           annotations:
             summary: |-
               tiltaksgjennomforing-varsel har logget en feil :error: Sjekk loggene om noe bør gjøres!
-            action: "Sjekk logs.adeo.no for logger: https://logs.adeo.no/goto/e8fbddda1b6f991a1d33970355649d0f"
+            action: "Sjekk logs.adeo.no for logger: https://logs.adeo.no/s/nav-logs-legacy/app/r/s/aoTws"
           labels:
             namespace: team-tiltak
             severity: critical
