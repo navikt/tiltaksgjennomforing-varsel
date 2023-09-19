@@ -18,11 +18,6 @@ public class VarselService {
     private final AltinnVarselAdapter altinnVarselAdapter;
     private final SmsVarselResultatProducer resultatProducer;
 
-    private static VarselKvittering ignorertUtsending(SmsVarselMelding varselMelding) {
-        return new VarselKvittering(varselMelding.getSmsVarselId(), VarselStatus.IGNORERT);
-    }
-
-
     public void prosesserVarsel(SmsVarselMelding varselMelding) {
         if (!varselKvitteringRepository.existsById(varselMelding.getSmsVarselId())) {
             log.info("SmsVarsel med smsVarselId={} prosesseres", varselMelding.getSmsVarselId());
