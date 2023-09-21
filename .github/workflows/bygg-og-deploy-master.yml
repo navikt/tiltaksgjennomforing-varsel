@@ -14,6 +14,8 @@ jobs:
   bygg:
     name: Bygg
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     steps:
       - name: Lukk deployment-issues
         uses: actions/github-script@0.5.0
