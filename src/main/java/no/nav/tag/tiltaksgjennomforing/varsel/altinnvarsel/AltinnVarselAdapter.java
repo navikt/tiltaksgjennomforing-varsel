@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
+import static no.nav.tag.tiltaksgjennomforing.varsel.altinnvarsel.AltinnFunksjonellFeil.erFunksjonellFeil;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -64,15 +66,39 @@ public class AltinnVarselAdapter {
     }
 
     private void prosesserVarselFeil(INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage e) {
+        final String altinnErrorMessage = constructAltinnErrorMessage(e);
+        Integer feilkode = getFeilkode(e);
+        log.error("Feil ved varsling gjennom Altinn. Feilkode: {}", feilkode);
+        if (erFunksjonellFeil(feilkode)) {
+            log.error("Funksjonell feil i kall mot Altinn. ErorrMessage: {}", altinnErrorMessage);
+        }
+    }
+
+
+    // Liste over errorID: https://altinn.github.io/docs/api/tjenesteeiere/soap/grensesnitt/varseltjeneste/#feilsituasjoner
+    private String constructAltinnErrorMessage(INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage e) {
         AltinnFault faultInfo = e.getFaultInfo();
         if (faultInfo == null) {
-            log.error(e.getMessage());
+            return e.getMessage();
         }
-
-        String errorMessage = "errorGuid=" + unwrap(faultInfo.getErrorGuid()) + ", " +
+        return "errorGuid=" + unwrap(faultInfo.getErrorGuid()) + ", " +
                 "userGuid=" + unwrap(faultInfo.getUserGuid()) + ", " +
                 "errorId=" + faultInfo.getErrorID() + ", " +
                 "errorMessage=" + unwrap(faultInfo.getAltinnErrorMessage());
-
     }
+    private Integer getFeilkode(INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage e) {
+        AltinnFault faultInfo = e.getFaultInfo();
+        if (faultInfo == null) {
+            return null;
+        }
+        return faultInfo.getErrorID();
+    }
+    private String unwrap(JAXBElement<String> jaxbElement) {
+        if (jaxbElement == null) {
+            return "null";
+        }
+        return jaxbElement.getValue();
+    }
+
+
 }
