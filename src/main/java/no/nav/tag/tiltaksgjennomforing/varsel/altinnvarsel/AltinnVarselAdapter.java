@@ -56,11 +56,12 @@ public class AltinnVarselAdapter {
                     varselProperties.getSystemBruker(),
                     varselProperties.getSystemPassord(),
                     standaloneNotification);
-        } catch (INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage | RuntimeException e) {
+        } catch (INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage e) {
             log.error("Feil ved varsling gjennom Altinn", e);
-            if (e instanceof INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage) {
-                log.error(e.isr);
-            }
+            prosesserVarselFeil(e);
+            throw new AltinnException("Feil ved varsling gjennom Altinn");
+        } catch (RuntimeException e) {
+            log.error("Feil ved varsling gjennom Altinn", e);
             throw new AltinnException("Feil ved varsling gjennom Altinn");
         }
     }
@@ -73,7 +74,6 @@ public class AltinnVarselAdapter {
             log.error("Funksjonell feil i kall mot Altinn. ErorrMessage: {}", altinnErrorMessage);
         }
     }
-
 
     // Liste over errorID: https://altinn.github.io/docs/api/tjenesteeiere/soap/grensesnitt/varseltjeneste/#feilsituasjoner
     private String constructAltinnErrorMessage(INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage e) {
