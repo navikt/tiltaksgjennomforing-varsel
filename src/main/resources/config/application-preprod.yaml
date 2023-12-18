@@ -17,5 +17,3 @@ tiltaksgjennomforing:
     username: ${tiltaksgjennomforing.serviceuser.username}
     password: ${tiltaksgjennomforing.serviceuser.password}
     ws-uri: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
-  unleash:
-    unleash-uri: https://unleash.nais.io/api/

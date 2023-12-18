@@ -3,7 +3,6 @@ package no.nav.tag.tiltaksgjennomforing.varsel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tiltaksgjennomforing.exceptions.AltinnException;
-import no.nav.tag.tiltaksgjennomforing.featuretoggles.FeatureToggleService;
 import no.nav.tag.tiltaksgjennomforing.varsel.altinnvarsel.AltinnVarselAdapter;
 import no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselMelding;
 import no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselResultatProducer;
@@ -18,11 +17,6 @@ public class VarselService {
     private final VarselKvitteringRepository varselKvitteringRepository;
     private final AltinnVarselAdapter altinnVarselAdapter;
     private final SmsVarselResultatProducer resultatProducer;
-    private final FeatureToggleService featureToggleService;
-
-    private static VarselKvittering ignorertUtsending(SmsVarselMelding varselMelding) {
-        return new VarselKvittering(varselMelding.getSmsVarselId(), VarselStatus.IGNORERT);
-    }
 
     public void prosesserVarsel(SmsVarselMelding varselMelding) {
         if (!varselKvitteringRepository.existsById(varselMelding.getSmsVarselId())) {
@@ -34,10 +28,6 @@ public class VarselService {
     }
 
     private void sendVarsel(SmsVarselMelding varselMelding) {
-        if (!featureToggleService.smsVarselErAktivert()) {
-            log.info("Sms er ikke aktivert i Unleash. Lagrer ikke kvittering i db.");
-            return;
-        }
         VarselKvittering varselKvittering = kallAltinnVarseltjeneste(varselMelding);
         varselKvitteringRepository.insert(varselKvittering);
         resultatProducer.sendMeldingTilKafka(varselKvittering);

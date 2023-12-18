@@ -12,6 +12,8 @@ jobs:
   bygg:
     name: Bygg
     runs-on: ubuntu-latest
+    permissions:
+      packages: write
     steps:
       - name: Sjekk ut kode
         uses: actions/checkout@v2
