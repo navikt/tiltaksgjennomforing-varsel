@@ -57,21 +57,22 @@ public class AltinnVarselAdapter {
                     varselProperties.getSystemPassord(),
                     standaloneNotification);
         } catch (INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage e) {
-            log.error("Feil ved varsling gjennom Altinn", e);
+            log.warn("Feil ved varsling gjennom Altinn", e);
             prosesserVarselFeil(e);
-            throw new AltinnException("Feil ved varsling gjennom Altinn");
+            throw new AltinnException("Feil ved varsling gjennom Altinn (AltinnException - v3faultfaultfault)");
         } catch (RuntimeException e) {
             log.error("Feil ved varsling gjennom Altinn", e);
-            throw new AltinnException("Feil ved varsling gjennom Altinn");
+            throw new AltinnException("Feil ved varsling gjennom Altinn (RuntimeException)");
         }
     }
 
     private void prosesserVarselFeil(INotificationAgencyExternalBasicSendStandaloneNotificationBasicV3AltinnFaultFaultFaultMessage e) {
         final String altinnErrorMessage = constructAltinnErrorMessage(e);
         Integer feilkode = getFeilkode(e);
-        log.error("Feil ved varsling gjennom Altinn. Feilkode: {}", feilkode);
         if (erFunksjonellFeil(feilkode)) {
-            log.error("Funksjonell feil i kall mot Altinn. ErorrMessage: {}", altinnErrorMessage);
+            log.warn("Funksjonell feil i kall mot Altinn med feilkode: {} ErorrMessage: {}", feilkode, altinnErrorMessage);
+        } else {
+            log.error("Ikke-funksjonell/Teknisk feil mot Altinn. Feilkode: {} ErorrMessage: {}", feilkode, altinnErrorMessage);
         }
     }
 
