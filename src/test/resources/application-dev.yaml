@@ -1,7 +1,7 @@
 spring:
   datasource:
     platform: postgres
-    url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    url: jdbc:h2:mem:${random.uuid};DB_CLOSE_DELAY=-1;MODE=PostgreSQL
     username: sa
     password: sa
     driverClassName: org.h2.Driver
@@ -19,4 +19,4 @@ spring:
 
 tiltaksgjennomforing:
   altinn-varsel:
-    uri: http://localhost:8091
+    uri: http://localhost:${wiremock.server.port:8091}
