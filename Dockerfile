@@ -1,5 +1,3 @@
-FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/jre:openjdk-21
+FROM ghcr.io/navikt/baseimages/temurin:17
+COPY import-vault-token.sh /init-scripts
 COPY /target/tiltaksgjennomforing-varsel-1.0.0-SNAPSHOT.jar app.jar
-ENV TZ="Europe/Oslo"
-EXPOSE 8080
-CMD ["-jar", "app.jar"]
