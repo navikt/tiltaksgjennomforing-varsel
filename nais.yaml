@@ -32,6 +32,8 @@ spec:
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: {{spring-profil}}
+  envFrom:
+    - secret: tiltaksgjennomforing-varsel
   webproxy: true
   prometheus:
     enabled: true
