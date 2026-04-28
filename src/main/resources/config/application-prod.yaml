@@ -11,11 +11,5 @@ tiltaksgjennomforing:
     minimum-idle: 1
     maximum-pool-size: 2
     max-lifetime: 300000
-  altinn-varsel:
-    uri: https://pep-gw.oera.no:9443/ekstern/altinn/notificationagencyexternalbasic/v1
-    system-bruker: ${TILTAKSGJENNOMFORING_ALTINN_VARSEL_SYSTEM_BRUKER}
-    system-passord: ${TILTAKSGJENNOMFORING_ALTINN_VARSEL_SYSTEM_PASSORD}
-  sts:
-    username: ${TILTAKSGJENNOMFORING_SERVICEUSER_USERNAME}
-    password: ${TILTAKSGJENNOMFORING_SERVICEUSER_PASSWORD}
-    ws-uri: https://sts.adeo.no/SecurityTokenServiceProvider/
+  altinn:
+    base-url: https://platform.altinn.no

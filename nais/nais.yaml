@@ -29,6 +29,15 @@ spec:
       memory: 1000Mi
   vault:
     enabled: true
+  maskinporten:
+    enabled: true
+    scopes:
+      consumes:
+        - name: "altinn:serviceowner/notifications.create"
+  accessPolicy:
+    outbound:
+      external:
+        - host: {{altinn-host}}
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: {{spring-profil}}

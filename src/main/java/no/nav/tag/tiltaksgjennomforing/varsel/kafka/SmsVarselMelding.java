@@ -15,4 +15,14 @@ public class SmsVarselMelding {
     private String telefonnummer;
     private String meldingstekst;
     private String avsenderApplikasjon;
+
+    public String getTelefonnummerMedLandskode() {
+        if (telefonnummer == null || telefonnummer.isBlank()) {
+            throw new IllegalArgumentException("Telefonnummer kan ikke være null eller tomt");
+        }
+        if (telefonnummer.startsWith("+") || telefonnummer.startsWith("00")) {
+            return telefonnummer;
+        }
+        return "+47" + telefonnummer;
+    }
 }

@@ -3,7 +3,7 @@ package no.nav.tag.tiltaksgjennomforing.varsel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import no.nav.tag.tiltaksgjennomforing.exceptions.AltinnException;
-import no.nav.tag.tiltaksgjennomforing.varsel.altinnvarsel.AltinnVarselAdapter;
+import no.nav.tag.tiltaksgjennomforing.varsel.altinn.AltinnVarselAdapter;
 import no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselMelding;
 import no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselResultatProducer;
 import org.springframework.context.annotation.Profile;
@@ -35,9 +35,15 @@ public class VarselService {
 
     private VarselKvittering kallAltinnVarseltjeneste(SmsVarselMelding varselMelding) {
         try {
-            altinnVarselAdapter.sendVarsel(varselMelding.getIdentifikator(), varselMelding.getTelefonnummer(), varselMelding.getMeldingstekst());
+            String ordreId = altinnVarselAdapter.sendVarsel(
+                    varselMelding.getSmsVarselId().toString(),
+                    varselMelding.getTelefonnummerMedLandskode(),
+                    varselMelding.getMeldingstekst()
+            );
+            log.info("Varsel sendt til Altinn for smsVarselId={}, ordreId={}", varselMelding.getSmsVarselId(), ordreId);
             return new VarselKvittering(varselMelding.getSmsVarselId(), VarselStatus.SENDT);
         } catch (AltinnException e) {
+            log.error("Feil ved sending av varsel for smsVarselId={}", varselMelding.getSmsVarselId(), e);
             return new VarselKvittering(varselMelding.getSmsVarselId(), VarselStatus.FEIL);
         }
     }

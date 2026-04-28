@@ -1,0 +1,5 @@
+{
+  "spring-profil": "prod,kafka",
+  "kafka-pool": "nav-prod",
+  "altinn-host": "platform.altinn.no"
+}

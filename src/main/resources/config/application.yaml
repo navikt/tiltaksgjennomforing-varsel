@@ -47,3 +47,5 @@ tiltaksgjennomforing:
   topics:
     sms: arbeidsgiver.tiltak-sms
     sms-resultat: arbeidsgiver.tiltak-sms-resultat
+  altinn:
+    base-url: http://localhost:8091
