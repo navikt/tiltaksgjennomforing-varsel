@@ -49,5 +49,6 @@ jobs:
         name: Deploy til dev-fss
         env:
           CLUSTER: dev-fss
-          RESOURCE: nais.yaml
-          VAR: spring-profil=preprod,kafka-pool=nav-dev,image=${{ needs.build.outputs.image }}
+          RESOURCE: nais/nais.yaml
+          VARS: nais/dev-fss.json
+          VAR: image=${{ needs.build.outputs.image }}

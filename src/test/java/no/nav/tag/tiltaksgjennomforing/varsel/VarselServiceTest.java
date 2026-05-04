@@ -1,6 +1,6 @@
 package no.nav.tag.tiltaksgjennomforing.varsel;
 
-import no.nav.tag.tiltaksgjennomforing.varsel.altinnvarsel.AltinnVarselAdapter;
+import no.nav.tag.tiltaksgjennomforing.varsel.altinn.AltinnVarselAdapter;
 import no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselMelding;
 import no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselResultatProducer;
 import org.junit.jupiter.api.Test;

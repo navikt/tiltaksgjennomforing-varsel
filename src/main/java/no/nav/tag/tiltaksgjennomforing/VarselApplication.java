@@ -7,13 +7,15 @@ import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
+import org.springframework.cache.annotation.EnableCaching;
+
 @SpringBootApplication(exclude = KafkaAutoConfiguration.class)
 @EnableConfigurationProperties
+@EnableCaching
 public class VarselApplication {
     public static void main(String[] args) {
         SpringApplication application = new SpringApplicationBuilder(VarselApplication.class)
                 .initializers(new SjekkAktiveProfilerInitializer())
-                .profiles("kafka")
                 .build();
         application.run();
     }
