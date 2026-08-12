@@ -18,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class AltinnVarselClient {
     private static final String ORDER_PATH = "/notifications/api/v1/future/orders";
+    private static final String SENDER = "Nav";
 
     private final RestTemplate restTemplate;
     private final AltinnVarselProperties properties;
@@ -54,6 +55,7 @@ public class AltinnVarselClient {
                     .phoneNumber(phoneNumber)
                     .smsSettings(OrderRequest.SmsSettings.builder()
                         .body(body)
+                        .sender(SENDER)
                         .sendingTimePolicy(properties.getSendingTimePolicy())
                         .build()
                     )
