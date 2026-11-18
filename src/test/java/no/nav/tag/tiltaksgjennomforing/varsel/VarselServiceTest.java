@@ -6,12 +6,12 @@ import no.nav.tag.tiltaksgjennomforing.varsel.kafka.SmsVarselResultatProducer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.util.UUID;
 
@@ -29,11 +29,11 @@ import static org.mockito.Mockito.verify;
 public class VarselServiceTest {
     @Autowired
     private VarselService varselService;
-    @SpyBean
+    @MockitoSpyBean
     private VarselKvitteringRepository repository;
-    @MockBean
+    @MockitoBean
     private AltinnVarselAdapter altinnVarselAdapter;
-    @MockBean
+    @MockitoBean
     private SmsVarselResultatProducer resultatProducer;
 
     @Test
