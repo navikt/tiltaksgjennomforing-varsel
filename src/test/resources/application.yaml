@@ -1,6 +1,5 @@
 spring:
   kafka:
     bootstrap-servers: ${spring.embedded.kafka.brokers}
-  json:
-    use.type.headers: false
-
+    security:
+      protocol: PLAINTEXT

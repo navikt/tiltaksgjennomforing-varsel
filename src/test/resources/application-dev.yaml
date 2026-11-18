@@ -6,8 +6,8 @@ spring:
     password: sa
     driverClassName: org.h2.Driver
   kafka:
-    properties:
-      security.protocol: PLAINTEXT
+    security:
+      protocol: PLAINTEXT
     bootstrap-servers: ${spring.embedded.kafka.brokers}
   h2:
     console:
