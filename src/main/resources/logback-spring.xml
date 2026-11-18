@@ -17,6 +17,8 @@
         </logger>
     </springProfile>
     <logger name="no.nav.vault.jdbc" level="WARN" />
+    <!-- Hibernate INFO-logger JDBC-URL i klartekst. Kan lekke passord -->
+    <logger name="org.hibernate.orm.connections.pooling" level="WARN"/>
     <root level="INFO">
         <appender-ref ref="consoleAppender"/>
     </root>
