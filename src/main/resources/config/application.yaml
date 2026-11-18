@@ -16,16 +16,15 @@ spring:
   jmx:
     enabled: false
   kafka:
-    properties:
-      security.protocol: SSL
-      ssl:
-        keystore:
-          type: PKCS12
-          location: ${KAFKA_KEYSTORE_PATH}
-          password: ${KAFKA_CREDSTORE_PASSWORD}
-        truststore:
-          location: ${KAFKA_TRUSTSTORE_PATH}
-          password: ${KAFKA_CREDSTORE_PASSWORD}
+    security:
+      protocol: SSL
+    ssl:
+      trust-store-type: JKS
+      trust-store-location: file:${KAFKA_TRUSTSTORE_PATH}
+      trust-store-password: ${KAFKA_CREDSTORE_PASSWORD}
+      key-store-type: PKCS12
+      key-store-location: file:${KAFKA_KEYSTORE_PATH}
+      key-store-password: ${KAFKA_CREDSTORE_PASSWORD}
     bootstrap-servers: ${KAFKA_BROKERS}
     consumer:
       auto-offset-reset: earliest
