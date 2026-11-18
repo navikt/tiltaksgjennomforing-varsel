@@ -18,10 +18,10 @@ jobs:
       - name: Sjekk ut kode
         uses: actions/checkout@v4
 
-      - name: Oppsett Java 25
+      - name: Oppsett Java 11
         uses: actions/setup-java@v4
         with:
-          java-version: 25
+          java-version: 11
           distribution: temurin
           cache: maven
 
